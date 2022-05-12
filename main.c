@@ -11,17 +11,15 @@ int main(void)
         char str[MAXCHAR];
         int select;
 
-        imprimir_menu();
+        print_menu();
         fgets(str, MAXCHAR, stdin);
         select = toselect(str);
 
         switch (select)
         {
         case cargar:
-            /*
-                Realizar lectura línea, identificar textos que existan e importar.
-                cargar_docs();
-            */
+            cargar_docs();
+            getchar();
             break;
         case mo_ord:
             /*
@@ -40,10 +38,15 @@ int main(void)
         case ctx_pl:
             // palabra en contexto
             break;
+        case end:
+            printf("Saliendo del programa...\n");
+            getchar();
+            return 0;
+            break;
         default:
             printf("Opción no valida!\n");
+            getchar();
             break;
         }
     }
-    return 0;
 }
