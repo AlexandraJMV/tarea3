@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "funciones.h"
+#include <locale.h>
 
 int main(void)
 {
+    libreria * librer = create_libreria();
     while(1)
     {
         system("cls");
@@ -18,7 +20,8 @@ int main(void)
         switch (select)
         {
         case cargar:
-            cargar_docs();
+            cargar_docs(librer);
+            printpaltest(librer);
             getchar();
             break;
         case mo_ord:
