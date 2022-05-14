@@ -1,4 +1,3 @@
-// fuck fuck fuck fuck fuck fuck fuck fuck fuck fuck
 #include <stdio.h>
 #include <stdlib.h>
 #include "funciones.h"
@@ -22,23 +21,24 @@ int main(void)
         case cargar:
             cargar_docs(librer);
             printlibrostest(librer);
+            printpaltest(librer);
             getchar();
             break;
-        case mo_ord:
+        case mostrar_ordenado:
             /*
                 m_orden();
             */
             break;
-        case bu_tit:
+        case buscar_titulo:
             //busc
             break;
-        case m_fr:
+        case mayor_frecuencia:
             //mayor frecuencia
             break;
-        case bu_pl:
+        case buscar_palabra:
             // buscar por palabra
             break;
-        case ctx_pl:
+        case contexto_palabra:
             // palabra en contexto
             break;
         case end:

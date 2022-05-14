@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include "funciones.h"
 #include "treemap.h"
-#include "hashmap.h"
 
 typedef struct palabra{
     char palabra[MAXCHAR];
@@ -26,22 +25,16 @@ typedef struct libreria{
     int libros_tot;
 }libreria;
 
-int lower_than_string(void* key1, void* key2){
-    char* k1=(char*) key1;
-    char* k2=(char*) key2;
-    if(strcmp(k1,k2)<0) return 1;
-    return 0;
-}
-
 // Impresion de menu de opciones para programa
 void print_menu()
 {
     printf( "Libreria\n\n"
 
             "1. Cargar archivos.\n"
-            "7. Salir del programa"
+            "2. Mostrar documentos ordenados\n"
+            "7. Salir del programa\n"
 
-            "\nIngrese lo que desea hacer:\n\n");
+            "\nIngrese lo que desea hacer: ");
 }
 
 // transforma una cadena leida a una seleccion valida.
@@ -158,7 +151,7 @@ palabra * create_palabra(char * str)
     return pal;
 }
 
-void guardar_palabras(libro * lib, TreeMap * palabras, char *str)
+void guardar_palabras(libro * lib, char *str)
 {
     int cont = 0;
     int pos=0;
@@ -167,7 +160,6 @@ void guardar_palabras(libro * lib, TreeMap * palabras, char *str)
         cont++;
         char pal[MAXCHAR];
         char clean[MAXCHAR];
-        palabra * p;
 
         get_pal(str, pal, &pos);
         if (pal[0] =='\0') break;
@@ -177,26 +169,35 @@ void guardar_palabras(libro * lib, TreeMap * palabras, char *str)
         if( clean[0]!='\0' )
         {
             minusc(clean);
-            TreePair * par = searchTreeMap(palabras, clean);
+
+            TreePair * par = searchTreeMap(lib->pal_libro, clean);
             if (par == NULL)
             {
-                p = create_palabra(clean);
-                p->ocurrencia = 1;
+                palabra * pp = create_palabra(clean);
+                pp->ocurrencia = 1;
                 if(lib->pal_tot != 0)
-                    p->frecuencia = (float) 1 / (float) lib->pal_tot;
-                
-                insertTreeMap(palabras, clean, p);
+                    pp->frecuencia = (float) 1 / (float) lib->pal_tot;
+                insertTreeMap(lib->pal_libro, _strdup(clean), pp);
             }
             else
             {
-                p = (palabra *) par->value;
+                //printf("%s es repetido ", clean);
+                palabra * p = (palabra *) par->value;
                 p->ocurrencia++;
                 p->frecuencia = (float) p->ocurrencia / (float) lib->pal_tot;
+                //printf("su valor es %s\n\n", p->palabra);
             }
             lib->pal_tot++;
             lib->char_tot = lib->char_tot + strlen(clean);
         }
     }
+}
+
+int lower_than_string(void* key1, void* key2){
+    char* k1=(char*) key1;
+    char* k2=(char*) key2;
+    if(strcmp(k1,k2)<0) return 1;
+    return 0;
 }
 
 libro* create_book(char * id)
@@ -233,7 +234,7 @@ libro* read_book(char * arch, FILE * file)
             if(linea[0] == '\n' || linea[0] == '\0')
             {
                 strcpy(lb->titulo, extract_title(aux_titl)); //guardar_palabras(lb->pal_titulo, lb->pal_titulo);
-                guardar_palabras(lb, lb->pal_titulo, lb->titulo);
+                //guardar_palabras(lb, lb->pal_titulo, lb->titulo);
                 lin = 1;
                 continue;
             }
@@ -257,7 +258,7 @@ libro* read_book(char * arch, FILE * file)
             if (strstr(linea, END_FORMAT) != NULL)
                 break;
 
-        guardar_palabras(lb, lb->pal_libro, linea);
+        guardar_palabras(lb, linea);
     }
     return lb;
 }
@@ -342,10 +343,9 @@ void printpaltest(libreria* libreria)
     int cont = 0;
     TreePair * treepar = firstTreeMap(libreria->libros_ord);
     libro* lib = (libro *)treepar->value;
-    printf("NWE VERSION!!!!!!1   %s\n\n",lib->titulo);
     TreePair * par = firstTreeMap(lib->pal_libro);
     if(par==NULL) printf("La COSA. esta vacia\n");
-    while(par!=NULL && cont<100)
+    while(par!=NULL && cont<10)
     {
         palabra* pal = (palabra*) par->value;
         printf("palabra: %s\n", pal->palabra);

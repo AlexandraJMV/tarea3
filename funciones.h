@@ -7,15 +7,20 @@
 #define FIRSTLIN_FORMAT "The Project Gutenberg eBook of "
 #define LASTLIN_FORMAT ", by"
 
-enum op1{cargar=1, mo_ord, bu_tit, m_fr, bu_pl, ctx_pl, end };
+enum op1{cargar=1, mostrar_ordenado, buscar_titulo, mayor_frecuencia, buscar_palabra, contexto_palabra, end };
 
 typedef struct libreria libreria;
 
 void print_menu();
+
 void cargar_docs(libreria * lib);
+
 int toselect(char * str);
+
 libreria * create_libreria();
+
 void printlibrostest(libreria * Libreria);
+
 void printpaltest(libreria* libreria);
 
 #endif /*Funciones_h*/

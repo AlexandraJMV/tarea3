@@ -132,6 +132,7 @@ TreePair * searchTreeMap(TreeMap * tree, void* key) {
     TreeNode * aux = tree->root;
     
     while (aux != NULL) {
+        //printf("comparando %s y %s\n", (char*)key, (char*)aux->pair->key);
         if (tree->lower_than(key, aux->pair->key)) {
             aux = aux->left;
         } else if (tree->lower_than(aux->pair->key, key)) {
