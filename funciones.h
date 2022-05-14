@@ -2,6 +2,10 @@
 #define Funciones_h
 #define MAXCHAR 400
 #define MAXLIN 600
+#define STRT_FORMAT "*** START OF THE PROJECT GUTENBERG EBOOK"
+#define END_FORMAT "*** END OF THE PROJECT GUTENBERG EBOOK"
+#define FIRSTLIN_FORMAT "The Project Gutenberg eBook of "
+#define LASTLIN_FORMAT ", by"
 
 enum op1{cargar=1, mo_ord, bu_tit, m_fr, bu_pl, ctx_pl, end };
 

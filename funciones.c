@@ -5,9 +5,6 @@
 #include "funciones.h"
 #include "treemap.h"
 #include "hashmap.h"
-#define STRT_FORMAT "***"
-#define FIRSTLIN_FORMAT "The Project Gutenberg eBook of "
-#define LASTLIN_FORMAT ", by"
 
 typedef struct palabra{
     char palabra[MAXCHAR];
@@ -106,37 +103,38 @@ const char * extract_title(char * lin)
     {
         lin[nextline-lin] = '\0';
     }
-    return _strdup(lin+ini+4); // +3 para compensar la basura :(
+    return _strdup(lin+ini+4); // +4 para compensar la basura :(
+}
+
+void minusc(char * str)
+{
+    for(int i=0 ; str[i] !='\0' ; i++)
+        str[i]= tolower(str[i]);
 }
 
 char * clean_pal(char *str)
 {
-    int ind=0;
-    int inret  = 0;
-    int ini = 1;
+    int start;
+    int ind=0, iret  = 0;
     char ret[MAXCHAR];
 
-    if (toupper(str[0]) <'A' || toupper(str[0])>'Z')
-        ini = 0;
+    minusc(str);
+
+    start = 0;
 
     for (ind ; str[ind] != '\0' && str[ind] != '\n' ; ind++)
     {
-        if(toupper(str[ind]) >='A' || toupper(str[ind])<='Z')
-        {
-            ini = 1;
-            continue;
-        }
+        if(start == 0 && isalpha(str[ind]) != 0 && ispunct(str[ind]) == 0) start = 1;
 
-        if(ini == 1)
-        {
-            ret[inret] = str[ind];
-            inret++;
-        }
+        if(start==1 && (isalpha(str[ind]) == 0 || ispunct(str[ind]) != 0)) break;
 
-        if((toupper(str[ind]) <'A' || toupper(str[ind])>'Z')
-            && ini == 1) break;
+        if(start)
+        {
+            ret[iret] = str[ind];
+            iret++;
+        }
     }
-    ret[inret] = '\0';
+    ret[iret] = '\0';
     return _strdup(ret);
 }
 
@@ -147,7 +145,6 @@ palabra * create_palabra(char * str)
         perror("!");
         return NULL;
     }
-
     strcpy(pal->palabra, str);
     pal->ocurrencia = 1;
     pal->frecuencia = 0;
@@ -155,7 +152,7 @@ palabra * create_palabra(char * str)
     return pal;
 }
 
-void guardar_palabras(HashMap * palabras, char *str)
+void guardar_palabras(libro * lib, HashMap * palabras, char *str)
 {
     int cont = 0;
     int pos=0;
@@ -163,47 +160,56 @@ void guardar_palabras(HashMap * palabras, char *str)
     {
         cont++;
         char pal[MAXCHAR];
+        char clean[MAXCHAR];
         get_pal(str, pal, &pos);
         if (pal[0] =='\0') break;
+        
+        strcpy(clean, clean_pal(pal));
 
-        /*
-        char new_pal[MAXCHAR];
-        strcpy(new_pal, _strdup(clean_pal(pal)));
-        if (cont<20) printf("nueva palabra %s\n", new_pal);*/
-        if( pal[0]!='\0' )
+        if( clean[0]!='\0' )
         {
-            Pair * par = searchMap(palabras, pal);
+            minusc(clean);
+            Pair * par = searchMap(palabras, clean);
             if (par == NULL)
             {
-                
-                insertMap(palabras, pal, create_palabra(pal));
+                insertMap(palabras, clean, create_palabra(clean));
             }
             else
             {
                 palabra * p = (palabra*)return_value(par);
                 p->ocurrencia++;
             }
+            lib->pal_tot++;
+            lib->char_tot = lib->char_tot + strlen(clean);
         }
     }
 }
 
-libro* create_book(char * arch, FILE * file)
+libro* create_book(char * id)
 {
     libro * lb;
-    char linea[MAXLIN];
-    char aux_titl[MAXLIN];
-    int lin = 0, start=0;
-
     lb = (libro *)malloc(sizeof(libro));
     if (lb == NULL)
     {
         perror("No se pudo reservar memoria para el libro!\n");
         exit(1);
     }
-
     lb->pal_libro = createMap(MAXCHAR);
+    lb->pal_tot = 0;
+    lb->char_tot  = 0;
 
-    strcpy(lb->book_id, arch);
+    strcpy(lb->book_id, id);
+    return lb;
+}
+
+libro* read_book(char * arch, FILE * file)
+{
+    libro * lb;
+    char linea[MAXLIN];
+    char aux_titl[MAXLIN];
+    int lin = 0, start=0;
+
+    lb = create_book(arch);
 
     while(fgets(linea, MAXLIN, file) != NULL)
     {
@@ -231,9 +237,12 @@ libro* create_book(char * arch, FILE * file)
             continue;
         }
 
-        guardar_palabras(lb->pal_libro, linea);
-    }
+        if (start == 1) // Encuentra *** para terminar la lectura
+            if (strstr(linea, END_FORMAT) != NULL)
+                break;
 
+        guardar_palabras(lb, lb->pal_libro, linea);
+    }
     return lb;
 }
 
@@ -252,7 +261,7 @@ libro* importar(char * arch)
         return NULL;
     }
 
-    book = create_book(arch, entrada);
+    book = read_book(arch, entrada);
     fclose(entrada);
     return book;
 }
@@ -313,9 +322,9 @@ void printlibrostest(libreria * Libreria)
     TreePair * lib = firstTreeMap(Libreria->libros_ord);
     while(lib != NULL)
     {
-        printf("key es %s\n", lib->key);
         libro * book = (libro*) lib->value;
         printf("valor es %s\n", book->titulo);
+        printf("palabras y caracteres son %ld %ld\n\n",book->pal_tot, book->char_tot);
         lib = nextTreeMap(Libreria->libros_ord);
     }
 }
@@ -325,14 +334,14 @@ void printpaltest(libreria* libreria)
     int cont = 0;
     TreePair * treepar = firstTreeMap(libreria->libros_ord);
     libro* lib = (libro *)treepar->value;
-    printf("nombre libro %s\n\n",lib->titulo);
+    printf("NWE VERSION!!!!!!1   %s\n\n",lib->titulo);
     Pair * par = firstMap(lib->pal_libro);
     if(par==NULL) printf("La COSA. esta vacia\n");
-    while(par!=NULL && cont<20)
+    while(par!=NULL && cont<100)
     {
         palabra* pal = (palabra*) return_value(par);
         printf("palabra: %s\n", pal->palabra);
-        printf("ocurrencia = %ld\n", pal->ocurrencia);
+        printf("ocurrencia = %ld\n\n", pal->ocurrencia);
         par = nextMap(lib->pal_libro);
         cont++;
     }

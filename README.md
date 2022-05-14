@@ -16,7 +16,7 @@
 
  Quiza,eventualmente, buscar soluciones que no requieran sumar a fuerza bruta 4 caracteres para leer bien la primera linea!
 
-FINAL DE TEXTOMARCADO POR ALGO DELESTILO 
-*** END OF THE PROJECT GUTENBERG EBOOK THE KING JAMES BIBLE ***
-
-detectar^^^^^^^^^^^^^
+anotaciones: numeros no secontaran comopalabras
+numeros romanos SI seran palabras
+en palabras del tipo: I'll solo sera guardada la parte antes del ' = I
+^^^^^^^^FACIL DE ARREGLAR.

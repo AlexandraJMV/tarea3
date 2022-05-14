@@ -21,7 +21,7 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
-            printpaltest(librer);
+            printlibrostest(librer);
             getchar();
             break;
         case mo_ord:
