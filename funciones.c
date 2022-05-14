@@ -16,7 +16,7 @@ typedef struct libro{
     char titulo[MAXCHAR];
     char book_id[MAXCHAR];
     TreeMap * pal_titulo;
-    HashMap * pal_libro;
+    TreeMap * pal_libro;
     long pal_tot;
     long char_tot;
 }libro;
@@ -25,6 +25,13 @@ typedef struct libreria{
     TreeMap * libros_ord;
     int libros_tot;
 }libreria;
+
+int lower_than_string(void* key1, void* key2){
+    char* k1=(char*) key1;
+    char* k2=(char*) key2;
+    if(strcmp(k1,k2)<0) return 1;
+    return 0;
+}
 
 // Impresion de menu de opciones para programa
 void print_menu()
@@ -38,7 +45,6 @@ void print_menu()
 }
 
 // transforma una cadena leida a una seleccion valida.
-// falla si lo primero que se ingresa es \n. Arreglar.
 int toselect(char * str)
 {
     for(int i=0 ; str[i] != '\0' ; i++)
@@ -146,13 +152,13 @@ palabra * create_palabra(char * str)
         return NULL;
     }
     strcpy(pal->palabra, str);
-    pal->ocurrencia = 1;
+    pal->ocurrencia = 0;
     pal->frecuencia = 0;
 
     return pal;
 }
 
-void guardar_palabras(libro * lib, HashMap * palabras, char *str)
+void guardar_palabras(libro * lib, TreeMap * palabras, char *str)
 {
     int cont = 0;
     int pos=0;
@@ -161,6 +167,8 @@ void guardar_palabras(libro * lib, HashMap * palabras, char *str)
         cont++;
         char pal[MAXCHAR];
         char clean[MAXCHAR];
+        palabra * p;
+
         get_pal(str, pal, &pos);
         if (pal[0] =='\0') break;
         
@@ -169,15 +177,21 @@ void guardar_palabras(libro * lib, HashMap * palabras, char *str)
         if( clean[0]!='\0' )
         {
             minusc(clean);
-            Pair * par = searchMap(palabras, clean);
+            TreePair * par = searchTreeMap(palabras, clean);
             if (par == NULL)
             {
-                insertMap(palabras, clean, create_palabra(clean));
+                p = create_palabra(clean);
+                p->ocurrencia = 1;
+                if(lib->pal_tot != 0)
+                    p->frecuencia = (float) 1 / (float) lib->pal_tot;
+                
+                insertTreeMap(palabras, clean, p);
             }
             else
             {
-                palabra * p = (palabra*)return_value(par);
+                p = (palabra *) par->value;
                 p->ocurrencia++;
+                p->frecuencia = (float) p->ocurrencia / (float) lib->pal_tot;
             }
             lib->pal_tot++;
             lib->char_tot = lib->char_tot + strlen(clean);
@@ -191,10 +205,12 @@ libro* create_book(char * id)
     lb = (libro *)malloc(sizeof(libro));
     if (lb == NULL)
     {
-        perror("No se pudo reservar memoria para el libro!\n");
+        perror("No se pudo reservar memoria para el libro! ");
         exit(1);
     }
-    lb->pal_libro = createMap(MAXCHAR);
+
+    lb->pal_titulo = createTreeMap(lower_than_string);
+    lb->pal_libro = createTreeMap(lower_than_string);
     lb->pal_tot = 0;
     lb->char_tot  = 0;
 
@@ -216,8 +232,8 @@ libro* read_book(char * arch, FILE * file)
         if (lin == 0) { // Extrae titulo desde la primera linea
             if(linea[0] == '\n' || linea[0] == '\0')
             {
-                strcpy(lb->titulo, extract_title(aux_titl));
-                //guardar_palabras(lb->pal_titulo, lb->pal_titulo);
+                strcpy(lb->titulo, extract_title(aux_titl)); //guardar_palabras(lb->pal_titulo, lb->pal_titulo);
+                guardar_palabras(lb, lb->pal_titulo, lb->titulo);
                 lin = 1;
                 continue;
             }
@@ -248,7 +264,6 @@ libro* read_book(char * arch, FILE * file)
 
 libro* importar(char * arch)
 {
-    
     FILE * entrada;
     libro * book;
     char path[MAXCHAR] = "Libros/";
@@ -274,8 +289,7 @@ void cargar_docs(libreria * Libreria)
     char docs[MAXCHAR];
 
     printf("Ingrese los archivos que desea importar, separados por espacios\n");
-    fgets(docs, MAXCHAR, stdin);//
-    
+    fgets(docs, MAXCHAR, stdin);
     
     while (1)
     {
@@ -287,19 +301,13 @@ void cargar_docs(libreria * Libreria)
         if (lib != NULL)
         {
             insertTreeMap(Libreria->libros_ord, lib->titulo, lib);
+            Libreria->libros_tot ++;
             cont++;
         }
     }
 
     printf("Se han importado %d documentos de forma exitosa!\n", cont);
     return;
-}
-
-int lower_than_string(void* key1, void* key2){
-    char* k1=(char*) key1;
-    char* k2=(char*) key2;
-    if(strcmp(k1,k2)<0) return 1;
-    return 0;
 }
 
 libreria * create_libreria()
@@ -335,14 +343,14 @@ void printpaltest(libreria* libreria)
     TreePair * treepar = firstTreeMap(libreria->libros_ord);
     libro* lib = (libro *)treepar->value;
     printf("NWE VERSION!!!!!!1   %s\n\n",lib->titulo);
-    Pair * par = firstMap(lib->pal_libro);
+    TreePair * par = firstTreeMap(lib->pal_libro);
     if(par==NULL) printf("La COSA. esta vacia\n");
     while(par!=NULL && cont<100)
     {
-        palabra* pal = (palabra*) return_value(par);
+        palabra* pal = (palabra*) par->value;
         printf("palabra: %s\n", pal->palabra);
         printf("ocurrencia = %ld\n\n", pal->ocurrencia);
-        par = nextMap(lib->pal_libro);
+        par = nextTreeMap(lib->pal_libro);
         cont++;
     }
 }
