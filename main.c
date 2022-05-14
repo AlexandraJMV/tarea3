@@ -20,8 +20,6 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
-            printlibrostest(librer);
-            printpaltest(librer);
             getchar();
             break;
         case mostrar_ordenado:
@@ -33,7 +31,8 @@ int main(void)
             //busc
             break;
         case mayor_frecuencia:
-            //mayor frecuencia
+            top_frecuencia(librer);
+            getchar();
             break;
         case buscar_palabra:
             // buscar por palabra

@@ -20,3 +20,9 @@ anotaciones: numeros no secontaran comopalabras
 numeros romanos SI seran palabras
 en palabras del tipo: I'll solo sera guardada la parte antes del ' = I
 ^^^^^^^^FACIL DE ARREGLAR.
+
+IMPIRTANTE REVISAR QUE TEXTO EXISTA ANTES DE VOLVER A POTENCIALMENTE ABRIRLO
+
+Importnate: Crear metodos para evitar re leer libros o re calcular su frecuencia!!
+
+frecuencia imprimre 11 valores 4sum reason
