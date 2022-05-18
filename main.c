@@ -34,11 +34,16 @@ int main(void)
             top_frecuencia(librer);
             getchar();
             break;
+        case relevancia_Palabra:
+            //Relevancia_Palabra();
+            getchar;
+            break;
         case buscar_palabra:
-            // buscar por palabra
+            // buscar_palabra(librer);
+            getchar;
             break;
         case contexto_palabra:
-            // palabra en contexto
+            // contexto_palabra();
             break;
         case end:
             printf("Saliendo del programa...\n");

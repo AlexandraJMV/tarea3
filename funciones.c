@@ -40,8 +40,12 @@ void print_menu()
 
             "1. Cargar archivos.\n"
             "2. Mostrar documentos ordenados\n"
+            "3. Buscar libro por titulo\n"
             "4. Mostrar 10 palabras de mayor frecuencia\n"
-            "7. Salir del programa\n"
+            "5. Mostrar palabras relevantes de un libro\n"
+            "6. Buscar por Palabra\n"
+            "7. Mostrar contexto de una palabra\n"
+            "8. Salir del programa\n"
 
             "\nIngrese lo que desea hacer: ");
 }
@@ -498,4 +502,47 @@ void top_frecuencia(libreria * lib)
             currpal = (palabra*)nextList(top_f);
         }
     }
+}
+
+/*
+    6. Buscar por palabra. El usuario ingresa una palabra y la aplicación muestra los libros (id y título) 
+    que tienen la palabra en su contenido. Los libros deben ser ordenados por la relevancia de la palabra buscada.  
+    Por ejemplo, si busco “Jesús”, la biblia debería aparecer en primer lugar.
+    Si busco “mancha”, el Quijote debería salir en primer lugar.
+    
+    7. Mostrar palabra en su contexto dentro del libro. 
+    El usuario ingresa el título de un libro y el de una palabra a buscar. 
+    La aplicación muestra las distintas apariciones de la palabra en el contexto del documento, es decir,
+    para cada aparición, se muestran algunas palabras hacia atrás y hacia adelante de la palabra buscada
+    (por ejemplo, la línea completa en la que aparece la palabra, o 5 palabras hacia atrás y 5 hacia adelante).
+
+    solucion: 1)En buscar palabra , crear funcion que entregue los libros en el que estan presente la palabra y funcion
+                relevancia_palabra para ordenar el mostrar lista de libro segun relevancia.(mayor el num = mayor relevancia)
+              2)Por cada aparcion de una palabra mostrar la linea que lo contiene.
+
+
+*/
+float relevancia_palabra(libreria * lib){
+
+    float relevancia;
+
+    return relevancia;
+}
+
+void buscarPalabra(libreria * lib){
+
+    char palabra[MAXCHAR];
+    libro * lib;
+    List * listaLib=createList();
+
+
+
+    printf("Ingrese la palabra a buscar:\n");
+    //mostrarListaOrdenadaRelevancia(listaLib);
+
+     
+}
+
+void contexto_palabra(libreria * lib){
+
 }
