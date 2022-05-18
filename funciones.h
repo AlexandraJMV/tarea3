@@ -6,8 +6,9 @@
 #define END_FORMAT "*** END OF THE PROJECT GUTENBERG EBOOK"
 #define FIRSTLIN_FORMAT "The Project Gutenberg eBook of "
 #define LASTLIN_FORMAT ", by"
+#define PATH "Libros/"
 
-enum op1{cargar=1, mostrar_ordenado, buscar_titulo, mayor_frecuencia,relevancia_Palabra, buscar_palabra, contexto_palabra, end };
+enum op1{cargar=1, mostrar_ordenado, buscar_titulo, mayor_frecuencia,relevancia_Palabra, buscar_palabra, cntxt, end };
 
 typedef struct libreria libreria;
 
@@ -30,4 +31,6 @@ void buscarPalabra(libreria * lib);
 float relevancia_palabra(libreria * lib);
 
 void contexto_palabra(libreria * lib);
+
+void mostrar_ord(libreria * lib);
 #endif /*Funciones_h*/

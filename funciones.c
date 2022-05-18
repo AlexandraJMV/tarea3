@@ -10,6 +10,7 @@ typedef struct palabra{
     char palabra[MAXCHAR];
     long ocurrencia;
     float frecuencia;
+    float relevancia;
 }palabra;
 
 typedef struct libro{
@@ -17,6 +18,7 @@ typedef struct libro{
     char book_id[MAXCHAR];
     TreeMap * pal_titulo;
     TreeMap * pal_libro;
+    List * pal_relevantes;
     long pal_tot;
     long char_tot;
 }libro;
@@ -95,7 +97,7 @@ const char * extract_title(char * lin)
 {
     char tit[MAXCHAR];
     int i=0;
-    int ini = strlen(FIRSTLIN_FORMAT)+3;
+    int ini = strlen(FIRSTLIN_FORMAT)+3; // +3 para compensar la basura :(
     
     char * p = strstr(lin, ", by");
     if(p)
@@ -115,7 +117,7 @@ const char * extract_title(char * lin)
     {
         lin[nextline-lin] = '\0';
     }
-    return _strdup(lin+ini+4); // +4 para compensar la basura :(
+    return _strdup(lin+ini);
 }
 
 void minusc(char * str)
@@ -163,6 +165,7 @@ palabra * create_palabra(char * str)
     strcpy(pal->palabra, str);
     pal->ocurrencia = 0;
     pal->frecuencia = 0;
+    pal->relevancia = 0;
 
     return pal;
 }
@@ -214,6 +217,7 @@ libro* create_book(char * id)
         exit(1);
     }
 
+    lb->pal_relevantes = createList();
     lb->pal_titulo = createTreeMap(lower_than_string);
     lb->pal_libro = createTreeMap(lower_than_string);
     lb->pal_tot = 0;
@@ -239,7 +243,6 @@ libro* read_book(char * arch, FILE * file)
             {
                 strcpy(lb->titulo, extract_title(aux_titl));
                 guardar_palabras(lb, lb->pal_titulo, lb->titulo);
-                
                 
                 lin = 1;
                 continue;
@@ -273,15 +276,13 @@ libro* importar(char * arch)
 {
     FILE * entrada;
     libro * book;
-    char path[MAXCHAR] = "Libros/";
+    char path[MAXCHAR] = PATH;
 
     strcat(path, arch);
 
     entrada = fopen(path, "rt");
     if(entrada==NULL) 
-    {
         return NULL;
-    }
 
     book = read_book(arch, entrada);
     fclose(entrada);
@@ -364,9 +365,11 @@ void printpaltest(libreria* libreria)
     }
 }
 
-void elim_liminf(List * l, float * liminf)
+float elim_liminf(List * l, float liminf)
 {
-    float auxlim = *liminf;
+    float auxlim = liminf;
+    float new_lim;
+
     palabra * curr = (palabra*)firstList(l);
     while (curr != NULL)
     {
@@ -374,40 +377,36 @@ void elim_liminf(List * l, float * liminf)
         {
             popCurrent(l);
         }
-        else (*liminf) = curr->frecuencia;
-
+        else new_lim = curr->frecuencia;
         curr = (palabra*) nextList(l);
     }
+
+    return new_lim;
 }
 
-void find_frec(List * l, palabra * p, int * max)
+void insert_frec(List * l, palabra * p, int * max)
 {
-    
     palabra * curr = (palabra*)firstList(l);
     while (curr != NULL)
     {
-        //printf("frecuencias comp[aradas %f %f\n", curr->frecuencia, p->frecuencia);
         if(curr->frecuencia == p->frecuencia)
         {
             pushCurrent(l, p);
-            break;
+            return;
         } 
         else if(curr->frecuencia < p->frecuencia)
         {
             prevList(l);
             pushCurrent(l, p);
             (*max)++;
-            break;
+            return;
         }
         curr = (palabra*) nextList(l);
-        if (curr == NULL)
-        {
-            (*max)++;
-            pushBack(l, p);
-        }
     }
-
+    (*max)++;
+    pushBack(l, p);
 }
+
 
 List * find_top_frecuencia(libro * lib)
 {
@@ -417,16 +416,21 @@ List * find_top_frecuencia(libro * lib)
 
     if(lib==NULL) return NULL;
 
+    int cont = 0;
+
     TreePair * palpair = firstTreeMap(lib->pal_libro);
+    if (palpair==NULL) printf("no hay palabras wtf\n");
     while(palpair != NULL)
     {
+        cont++;
         palabra * pal = (palabra *) palpair->value;
+        
         pal->frecuencia = (float)pal->ocurrencia/(float)lib->pal_tot;
-
         if(pal->frecuencia == liminf)
-            pushBack(top, pal);
-        else if(pal->frecuencia == limsup)
+            pushBack(top, pal); 
+        else if (pal->frecuencia == limsup)
             pushFront(top, pal);
+            
         else if(pal->frecuencia > limsup)
         {
             limit++;
@@ -434,14 +438,13 @@ List * find_top_frecuencia(libro * lib)
             limsup = pal->frecuencia;
         }
         else if(pal->frecuencia > liminf)
-            find_frec(top, pal, &limit);
+            insert_frec(top, pal, &limit);
 
-        if(limit>10)
+        if(limit>=10)
         {
-            elim_liminf(top, &liminf);
-            limit --;
+            liminf = elim_liminf(top, liminf);
+            limit--;
         }
-
         palpair = nextTreeMap(lib->pal_libro);
     } 
     return top;
@@ -463,7 +466,7 @@ libro * search_id(TreeMap * libros, char * id)
 
 void top_frecuencia(libreria * lib)
 {
-    char id[MAXCHAR];
+    char id[MAXCHAR], select[5];
     libro * book;
     List * top_f;
     palabra * currpal;
@@ -480,6 +483,7 @@ void top_frecuencia(libreria * lib)
         top_f = find_top_frecuencia(book);
         
         currpal = (palabra*)firstList(top_f);
+        if (currpal==NULL) printf("Lista vacia\n");
         while (currpal!=NULL)
         {
             printf("\n%s %f", currpal->palabra,currpal->frecuencia);
@@ -488,6 +492,63 @@ void top_frecuencia(libreria * lib)
     }
 }
 
+void find_relev(libro * lib, libreria *  libreria)
+{
+    return;
+}
+
+void mostrar_relevancia(libreria * libreria)
+{
+    char title[MAXCHAR];
+    libro * lib;
+    TreePair * par;
+    palabra * p;
+
+    printf("Ingrese id del libro que quiere buscar (id.txt): ");
+    fgets(title, MAXCHAR, stdin);
+
+    par = searchTreeMap(libreria->libros_ord, title);
+    if (par == NULL){
+        printf("Este libro no existe en la libreria!");
+        return;
+    } 
+    else lib = (libro*) par->value;
+
+    if (firstList(lib->pal_relevantes) == NULL){
+        find_relev(lib, libreria);
+    }
+
+    p = (palabra*) firstList(lib->pal_relevantes);
+    while (p != NULL)
+    {
+        printf("Palabra: %s\nRelevancia: %f\n\n", p->relevancia);
+        p = (palabra*) nextList(lib->pal_relevantes);
+    }
+}
+
+
+
+void mostrar_ord(libreria * l){
+    TreeMap * libros_ord = l->libros_ord;
+
+    TreePair * treepar = firstTreeMap(libros_ord);
+    if(treepar == NULL){
+        printf("\nNo hay ningun libro guardado!\n");
+        return;
+    }
+
+    printf("Libros ordenados de manera alfabetica : \n");
+    while(treepar != NULL){
+        libro * lib = (libro*) treepar->value;
+        printf("-----------------------------------------------------------------\n");
+        printf("-->Titulo: %-52s |\n",lib -> titulo);
+        printf("Palabras: %-10ld Caracteres: %-10ld Id: %-14s  |\n",lib -> pal_tot, lib -> char_tot, lib->book_id);
+        printf("                                                                |\n");
+        printf("-----------------------------------------------------------------\n");
+        treepar = nextTreeMap(libros_ord);
+    } 
+    return;
+}
 /*
     6. Buscar por palabra. El usuario ingresa una palabra y la aplicación muestra los libros (id y título) 
     que tienen la palabra en su contenido. Los libros deben ser ordenados por la relevancia de la palabra buscada.  
@@ -506,14 +567,8 @@ void top_frecuencia(libreria * lib)
 
 
 */
-float relevancia_palabra(libreria * lib){
 
-    float relevancia;
-
-    return relevancia;
-}
-
-void buscarPalabra(libreria * lib){
+void buscarPalabra(libreria * l){
 
     char palabra[MAXCHAR];
     libro * lib;

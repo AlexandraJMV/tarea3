@@ -20,13 +20,12 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
-            printtitulo(librer);
             getchar();
             break;
         case mostrar_ordenado:
-            /*
-                m_orden();
-            */
+            system("cls");
+            mostrar_ord(librer);
+            getchar();
             break;
         case buscar_titulo:
             //busc
@@ -43,7 +42,7 @@ int main(void)
             // buscar_palabra(librer);
             getchar;
             break;
-        case contexto_palabra:
+        case cntxt:
             // contexto_palabra();
             break;
         case end:
@@ -52,7 +51,7 @@ int main(void)
             return 0;
             break;
         default:
-            printf("Opción no valida!\n");
+            printf("Opcion no valida!\n");
             getchar();
             break;
         }
