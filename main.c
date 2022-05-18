@@ -20,6 +20,7 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
+            printtitulo(librer);
             getchar();
             break;
         case mostrar_ordenado:

@@ -167,7 +167,7 @@ palabra * create_palabra(char * str)
     return pal;
 }
 
-void guardar_palabras(libro * lib, char *str)
+void guardar_palabras(libro * lib, TreeMap * obj, char *str)
 {
     int cont = 0;
     int pos=0;
@@ -186,12 +186,12 @@ void guardar_palabras(libro * lib, char *str)
         {
             minusc(clean);
 
-            TreePair * par = searchTreeMap(lib->pal_libro, clean);
+            TreePair * par = searchTreeMap(obj, clean);
             if (par == NULL)
             {
                 palabra * pp = create_palabra(clean);
                 pp->ocurrencia = 1;
-                insertTreeMap(lib->pal_libro, _strdup(clean), pp);
+                insertTreeMap(obj , _strdup(clean), pp);
             }
             else
             {
@@ -238,7 +238,7 @@ libro* read_book(char * arch, FILE * file)
             if(linea[0] == '\n' || linea[0] == '\0')
             {
                 strcpy(lb->titulo, extract_title(aux_titl));
-                //guardar_palabras(lb, lb->pal_titulo, lb->titulo);
+                guardar_palabras(lb, lb->pal_titulo, lb->titulo);
                 
                 
                 lin = 1;
@@ -264,7 +264,7 @@ libro* read_book(char * arch, FILE * file)
             if (strstr(linea, END_FORMAT) != NULL)
                 break;
 
-        guardar_palabras(lb, linea);
+        guardar_palabras(lb, lb->pal_libro, linea);
     }
     return lb;
 }
@@ -363,22 +363,6 @@ void printpaltest(libreria* libreria)
         cont++;
     }
 }
-
-/*
-    4. Palabras con mayor frecuencia. El usuario ingresa el id de un libro y la aplicación muestra las 10 palabras que se repiten
-    con mayor frecuencia (indicando la cantidad de veces que aparece cada una de ellas). (La frecuencia se calcula como la cantidad 
-    de veces que aparece una palabra dividida por el total de palabras en el libro.)
-
-    5. Palabras más relevantes.  El usuario ingresa el título de un libro y la aplicación muestra las 10 palabras más relevantes de este. 
-    Para calcular la relevancia de una palabra p en un documento d se debe aplicar la siguiente fórmula (tf-idf):
-    ocurrencias de p en el documento dcantidad de palabras en dlog(número de documentosdocumentos que tienen la palabra p)
-
-    SOLUCIONES:
-    la frecuencia se calcularia luego de importar el libro pk solo ahi se tiene el total de palabras.
-    Calcular frecuencia solo de aquellos libros que pida el usuario.
-
-    
-*/
 
 void elim_liminf(List * l, float * liminf)
 {
