@@ -25,4 +25,7 @@ void printpaltest(libreria* libreria);
 
 void top_frecuencia(libreria * lib);
 
+
+void printtitulo(libreria* libreria);
+
 #endif /*Funciones_h*/
