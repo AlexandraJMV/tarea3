@@ -483,20 +483,17 @@ void top_frecuencia(libreria * lib)
         }
     }
 }
+//muestra los documentos ordenados alfabeticamente y sus ids.
 
-void printtitulo(libreria* libreria)
-{
-    int cont = 0;
-    TreePair * treepar = firstTreeMap(libreria->libros_ord);
-    if(treepar==NULL) return;
-    libro* lib = (libro *)treepar->value;
-    TreePair * par = firstTreeMap(lib->pal_titulo);
-    if(par==NULL) printf("La COSA. esta vacia\n");
-    while(par!=NULL && cont<20)
-    {
-        palabra* pal = (palabra*) par->value;
-        printf("palabra: %s\n", pal->palabra);
-        par = nextTreeMap(lib->pal_titulo);
-        cont++;
-    }
+void mostrar_ord(List* libros_ord){
+    libro * lib = (libro*)firstList(libros_ord);
+    while(lib =! NULL){
+        printf("-----------------------------------------------------------------\n");
+        printf("-->Titulo: %-43s Id: %9s |\n",lib -> titulo, lib -> book_id);
+        printf("Palabras: %-43s Caracteres: %9s |\n",lib -> pal_tot, lib -> char_tot);
+        printf("                                                                |\n");
+        printf("-----------------------------------------------------------------\n");
+        lib=(libro*)nextList(libros_ord);
+    } 
+    return;
 }
