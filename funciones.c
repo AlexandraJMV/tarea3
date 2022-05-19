@@ -526,7 +526,17 @@ void mostrar_relevancia(libreria * libreria)
     }
 }
 
+void buscar_tit(libreria *l){
+    libro * lib;
+    TreePair * par;
+    palabra * p;
 
+    par = searchTreeMap(l->libros_ord, lib->pal_titulo);
+    printf("Ingrese palabras para buscar titulos, separados por espacios\n");
+    fgets(p, MAXCHAR, stdin);
+
+
+}
 
 void mostrar_ord(libreria * l){
     TreeMap * libros_ord = l->libros_ord;
@@ -549,6 +559,8 @@ void mostrar_ord(libreria * l){
     } 
     return;
 }
+
+
 /*
     6. Buscar por palabra. El usuario ingresa una palabra y la aplicación muestra los libros (id y título) 
     que tienen la palabra en su contenido. Los libros deben ser ordenados por la relevancia de la palabra buscada.  

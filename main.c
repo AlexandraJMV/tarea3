@@ -28,7 +28,9 @@ int main(void)
             getchar();
             break;
         case buscar_titulo:
-            //busc
+            system("cls");
+            buscar_tit(librer);
+            getchar();
             break;
         case mayor_frecuencia:
             top_frecuencia(librer);
