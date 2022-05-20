@@ -526,7 +526,7 @@ void mostrar_relevancia(libreria * libreria)
     }
 }
 
-void buscar_tit(libreria *l){
+/*void buscar_tit(libreria *l){
     libro * lib;
     TreePair * par;
     palabra * p;
@@ -536,7 +536,7 @@ void buscar_tit(libreria *l){
     fgets(p, MAXCHAR, stdin);
 
 
-}
+}*/
 
 void mostrar_ord(libreria * l){
     TreeMap * libros_ord = l->libros_ord;
