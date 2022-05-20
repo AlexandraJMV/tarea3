@@ -526,17 +526,50 @@ void mostrar_relevancia(libreria * libreria)
     }
 }
 
-/*void buscar_tit(libreria *l){
+void buscar_tit(libreria *l){
+    char palabra[MAXCHAR];
     libro * lib;
     TreePair * par;
-    palabra * p;
+    int pos = 0;
+    TreeMap * libros_ord = l->libros_ord;
+    TreePair * treepar = firstTreeMap(libros_ord);
+    while(1){
+        char pal[MAXCHAR];
+        get_pal(palabra, pal, &pos);
+        printf("Ingrese palabras para buscar titulos, separados por espacios\n");
+        fgets(palabra, MAXCHAR, stdin);
+        minusc(palabra);
 
-    par = searchTreeMap(l->libros_ord, lib->pal_titulo);
-    printf("Ingrese palabras para buscar titulos, separados por espacios\n");
-    fgets(p, MAXCHAR, stdin);
+        if (treepar == NULL)return;
+
+        while (treepar != NULL){
+            libro * lib = (libro*) treepar->value;
+            get_pal(palabra, pal, &pos);
+            par = searchTreeMap(lib -> pal_titulo, palabra);
+            if (par == NULL){
+                printf("Este titulo no existe en la libreria!");
+            return;
+            } 
+            else{
+                lib = (libro*) par->value;
+                printf("-----------------------------------------------------------------\n");
+                printf("-->Titulo: %-52s Id: %-14s  |\n",lib -> titulo, lib -> book_id);
+                printf("                                                                |\n");
+                printf("-----------------------------------------------------------------\n");
+            }
+            TreePair * treepar = nextTreeMap(libros_ord);
+            return;
+        }
+    }
 
 
-}*/
+
+
+
+
+
+
+}
 
 void mostrar_ord(libreria * l){
     TreeMap * libros_ord = l->libros_ord;
