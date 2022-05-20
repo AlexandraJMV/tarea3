@@ -671,18 +671,40 @@ void mostrar_ord(libreria * l){
 
 */
 
-void buscarPalabra(libreria * l){
+
+
+void buscarPalabra(libreria * lib){
 
     char palabra[MAXCHAR];
-    libro * lib;
-    List * listaLib=createList();
-
-
+    List * top_Relevancia=createList();
 
     printf("Ingrese la palabra a buscar:\n");
-    //mostrarListaOrdenadaRelevancia(listaLib);
+    scanf("%s",palabra);
+    getchar;
 
-     
+    minusc(palabra);
+
+    TreePair * trepair=firstTreeMap(lib->libros_ord);
+
+    if (trepair == NULL){
+        printf("No hay libros agregados.");
+        return;
+    }
+
+    while(trepair != NULL){
+        libro * libros=(libro *)trepair->value;
+        if (searchTreeMap(libros->pal_libro,palabra)->value != NULL){
+            pushBack(top_Relevancia,libros);
+        }
+
+        trepair=nextTreeMap(lib->libros_ord);
+    }
+    if(firstList(top_Relevancia) == NULL){
+        printf("la palabra que buscas no esta presente en ningun libro");
+    }
+    else{
+        //mostrarListaOrdenadaRelevancia(listaLib);
+    }   
 }
 
 void contexto_palabra(libreria * lib){
