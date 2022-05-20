@@ -37,8 +37,8 @@ int main(void)
             getchar();
             break;
         case relevancia_Palabra:
-            //Relevancia_Palabra();
-            getchar;
+            mostrar_relevancia(librer);
+            getchar();
             break;
         case buscar_palabra:
             // buscar_palabra(librer);

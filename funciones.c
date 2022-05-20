@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "funciones.h"
 #include "treemap.h"
 #include "list.h"
@@ -492,8 +493,57 @@ void top_frecuencia(libreria * lib)
     }
 }
 
+long pal_en_doc(palabra * p, libreria * libreria)
+{
+    long cont = 0;
+
+    TreePair * par = firstTreeMap(libreria->libros_ord);
+    while(par != NULL)
+    {
+        libro * book = (libro *) par->value;
+
+        if(searchTreeMap(book->pal_libro, p->palabra) != NULL)
+            cont++;
+
+        par = nextTreeMap(libreria->libros_ord);
+    }
+
+    return cont;
+}
+
 void find_relev(libro * lib, libreria *  libreria)
 {
+    /* hacer algo parecido a encontrar FRECUENCIA. lista de 10 o mas elementos que se actualica constantemente.
+       va a haber que calcular la relevanmcia nuevamente CADA VEZ que se agrege un libro nuevo DERP
+    
+    ocurrencias de p en el documento d/cantidad de palabras en d * log(número de documentos/documentos que tienen la palabra p)
+ */
+    long en_doc;
+
+    List * relevantes = lib->pal_relevantes;
+    if (relevantes == NULL) return;
+
+    TreePair * par = firstTreeMap(lib->pal_libro);
+
+    while (par != NULL)
+    {
+        palabra * pal = (palabra *)par->value; // extraccion de la palabra
+
+        /* Calcular la relevancia */
+        en_doc = pal_en_doc(pal, libreria);
+
+        if (en_doc != 0)
+            pal->relevancia = (float) pal->ocurrencia / (float) lib->pal_tot
+            * log(libreria->libros_tot/en_doc);
+        else 
+        {
+            printf("centinelun");
+            pal->relevancia = 0;
+        }
+        printf("releveancia %f\n", pal->relevancia);
+        par = nextTreeMap(lib->pal_libro);
+    }
+
     return;
 }
 
@@ -504,15 +554,21 @@ void mostrar_relevancia(libreria * libreria)
     TreePair * par;
     palabra * p;
 
-    printf("Ingrese id del libro que quiere buscar (id.txt): ");
+    
+    printf("Ingrese IDE del libro que quiere buscar : ");
     fgets(title, MAXCHAR, stdin);
-
+    char * pos = strstr(title, "\n");
+    if(pos) title[pos-title] = '\0';
+    /*
     par = searchTreeMap(libreria->libros_ord, title);
     if (par == NULL){
         printf("Este libro no existe en la libreria!");
         return;
     } 
-    else lib = (libro*) par->value;
+    else lib = (libro*) par->value;*/
+
+    lib = search_id(libreria->libros_ord, title);
+    if (lib == NULL) return;
 
     if (firstList(lib->pal_relevantes) == NULL){
         find_relev(lib, libreria);
@@ -590,6 +646,8 @@ void mostrar_ord(libreria * l){
         printf("-----------------------------------------------------------------\n");
         treepar = nextTreeMap(libros_ord);
     } 
+
+    printf("Hay un total de %ld libros\n", l->libros_tot);
     return;
 }
 
