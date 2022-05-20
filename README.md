@@ -26,3 +26,8 @@ IMPIRTANTE REVISAR QUE TEXTO EXISTA ANTES DE VOLVER A POTENCIALMENTE ABRIRLO
 Importnate: Crear metodos para evitar re leer libros o re calcular su frecuencia!!
 
 frecuencia imprimre 11 valores 4sum reason
+
+frecuencias repetidas se suentan como una sola en mostrar 10 frecuencias mas repetidas
+
+espacios y caracteres especiales no se cuentan como caracteres
+

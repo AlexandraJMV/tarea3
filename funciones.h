@@ -34,6 +34,7 @@ void contexto_palabra(libreria * lib);
 
 void mostrar_ord(libreria * lib);
 
+void mostrar_relevancia(libreria * l);
 //void buscar_tit(libreria * lib);
 
 #endif /*Funciones_h*/
