@@ -658,15 +658,14 @@ void buscar_tit(libreria *l){
 
     printf("Ingrese palabras para buscar titulos, separados por espacios\n");
     fgets(palabra, MAXCHAR, stdin);
-
-    while(1){
-        char pal[MAXCHAR];
-        get_pal(palabra, pal, &pos);
-        minusc(palabra);
-        if (pal[0] =='\0') break;
-    }
     if (treepar == NULL)return;
     while(treepar != NULL){
+        while(1){
+            char pal[MAXCHAR];
+            get_pal(palabra, pal, &pos);
+            minusc(palabra);
+            if (pal[0] =='\0') break;
+        }
         libro * lib = (libro*) treepar->value;
         par = searchTreeMap(lib -> pal_titulo, palabra);
         if (par == NULL){
