@@ -41,8 +41,8 @@ int main(void)
             getchar();
             break;
         case buscar_palabra:
-            // buscar_palabra(librer);
-            getchar;
+            printf("Peo");
+            getchar();
             break;
         case cntxt:
             // contexto_palabra();

@@ -94,33 +94,6 @@ void get_pal(char * str, char * ret , int * prev_pos)
     return;
 }
 
-const char * extract_title(char * lin)
-{
-    char tit[MAXCHAR];
-    int i=0;
-    int ini = strlen(FIRSTLIN_FORMAT)+3; // +3 para compensar la basura :(
-    
-    char * p = strstr(lin, ", by");
-    if(p)
-    {
-        for(ini ; ini<p-lin ; ini++)
-        {
-            tit[i] = lin[ini];
-            i++;
-        }
-        tit[i] = '\0';
-
-        return _strdup(tit);
-    }
-
-    char * nextline = strstr(lin, "\n");
-    if(nextline)
-    {
-        lin[nextline-lin] = '\0';
-    }
-    return _strdup(lin+ini);
-}
-
 void minusc(char * str)
 {
     for(int i=0 ; str[i] !='\0' ; i++)
@@ -228,47 +201,82 @@ libro* create_book(char * id)
     return lb;
 }
 
+/* Funcion borra una cadena dentro de otra, asumiendo que existe y la continua un espacio en la cadena a borrar */
+void delete_strstr(char * ret, char * del)
+{
+    int len = strlen(del) + 1;
+    int fin_str = strlen(ret) - len;
+    
+    char * p = strstr(ret, del);
+    for(int i=(p-ret) ; ret[i] != '\n' && ret[i] != '\0' && len >0 ; i++)
+        ret[i] = ret[i+len];
+    
+    ret[fin_str] = '\0';
+}
+
+
+void elim_edgespaces(char * str)
+{
+    return;
+}
+
 libro* read_book(char * arch, FILE * file)
 {
     libro * lb;
     char linea[MAXLIN];
     char aux_titl[MAXLIN];
-    int lin = 0, start=0;
+    int is_title = 0, start=0;
 
     lb = create_book(arch);
 
     while(fgets(linea, MAXLIN, file) != NULL)
     {
-        if (lin == 0) { // Extrae titulo desde la primera linea
+        /* Lee titulo ubicado antes del comienzo de la lectura */
+        if(start != 1 && is_title == 0)
+        {
+            if(strstr(linea, TITLE_FORMAT) != NULL)
+                is_title= 1;
+            
+            char * e = strstr(linea, TITLE_FORMAT);
+            if (e)
+                delete_strstr(linea, TITLE_FORMAT);
+        }
+
+        if(start != 1  && is_title == 1)
+        {
             if(linea[0] == '\n' || linea[0] == '\0')
             {
-                strcpy(lb->titulo, extract_title(aux_titl));
+                strcpy(lb->titulo, aux_titl);
                 guardar_palabras(lb, lb->pal_titulo, lb->titulo);
-                
-                lin = 1;
+
+                is_title ++;
                 continue;
             }
 
+            elim_edgespaces(linea);
+
             char * p = strstr(aux_titl,"\n");
-            if(p)
-            {
+            if(p) 
                 aux_titl[p-aux_titl] = ' ';
-            }
+
             strcat(aux_titl, linea);
         }
 
-        if (start != 1) // Encuentra el simbolo *** paraempezar con la lectura de palabras del texto.
+
+        /* Encuentra el simbolo *** paraempezar con la lectura de palabras del texto. */
+        if (start != 1) 
         {
             if (strstr(linea, STRT_FORMAT) != NULL)
                 start = 1;
             continue;
         }
 
-        if (start == 1) // Encuentra *** para terminar la lectura
+        /* Encuentra *** para terminar la lectura */
+        if (start == 1) 
             if (strstr(linea, END_FORMAT) != NULL)
                 break;
 
-        guardar_palabras(lb, lb->pal_libro, linea);
+        if(start) guardar_palabras(lb, lb->pal_libro, linea);
     }
     return lb;
 }
@@ -287,6 +295,7 @@ libro* importar(char * arch)
 
     book = read_book(arch, entrada);
     fclose(entrada);
+    free(entrada);
     return book;
 }
 
@@ -612,7 +621,7 @@ void buscar_tit(libreria *l){
     TreeMap * libros_ord = l->libros_ord;
     TreePair * treepar = firstTreeMap(libros_ord);
 
-    while(1){
+    while(treepar != NULL){ // Ciclo deberia ser controlado por los libros.  while(1)>> while(treepaer!+ NULl)
         char pal[MAXCHAR];
         get_pal(palabra, pal, &pos);
         printf("Ingrese palabras para buscar titulos, separados por espacios\n");
@@ -637,7 +646,7 @@ void buscar_tit(libreria *l){
                 printf("-----------------------------------------------------------------\n");
             }
             TreePair * treepar = nextTreeMap(libros_ord);
-            return;
+            // return; return termina la ejecucion antes de que imorima todo.
         }
     }
 }
