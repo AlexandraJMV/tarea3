@@ -20,25 +20,32 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
-            printpaltest(librer);
             getchar();
             break;
         case mostrar_ordenado:
+            system("cls");
             mostrar_ord(librer);
             getchar();
             break;
         case buscar_titulo:
-            //busc
+            system("cls");
+            buscar_tit(librer);
+            getchar();
             break;
         case mayor_frecuencia:
             top_frecuencia(librer);
             getchar();
             break;
-        case buscar_palabra:
-            // buscar por palabra
+        case relevancia_Palabra:
+            mostrar_relevancia(librer);
+            getchar();
             break;
-        case contexto_palabra:
-            // palabra en contexto
+        case buscar_palabra:
+            // buscar_palabra(librer);
+            getchar;
+            break;
+        case cntxt:
+            // contexto_palabra();
             break;
         case end:
             printf("Saliendo del programa...\n");
@@ -46,7 +53,7 @@ int main(void)
             return 0;
             break;
         default:
-            printf("Opción no valida!\n");
+            printf("Opcion no valida!\n");
             getchar();
             break;
         }
