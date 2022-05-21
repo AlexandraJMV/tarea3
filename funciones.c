@@ -14,7 +14,7 @@ typedef struct palabra{
     float relevancia;
 }palabra;
 
-typedef struct libro{
+typedef struct libro{   
     char titulo[MAXCHAR];
     char book_id[MAXCHAR];
     TreeMap * pal_titulo;
@@ -612,34 +612,32 @@ void buscar_tit(libreria *l){
     TreeMap * libros_ord = l->libros_ord;
     TreePair * treepar = firstTreeMap(libros_ord);
 
+    printf("Ingrese palabras para buscar titulos, separados por espacios\n");
+    fgets(palabra, MAXCHAR, stdin);
+
     while(1){
         char pal[MAXCHAR];
         get_pal(palabra, pal, &pos);
-        printf("Ingrese palabras para buscar titulos, separados por espacios\n");
-        fgets(palabra, MAXCHAR, stdin);
         minusc(palabra);
-
-        if (treepar == NULL)return;
-
-        while (treepar != NULL){
-            libro * lib = (libro*) treepar->value;
-            get_pal(palabra, pal, &pos);
-            par = searchTreeMap(lib -> pal_titulo, palabra);
-            if (par == NULL){
-                printf("Este titulo no existe en la libreria!");
-            return;
-            } 
-            else{
-                lib = (libro*) par->value;
-                printf("-----------------------------------------------------------------\n");
-                printf("-->Titulo: %-52s Id: %-14s  |\n",lib -> titulo, lib -> book_id);
-                printf("                                                                |\n");
-                printf("-----------------------------------------------------------------\n");
-            }
-            TreePair * treepar = nextTreeMap(libros_ord);
-            return;
-        }
+        if (pal[0] =='\0') break;
     }
+    if (treepar == NULL)return;
+    while(treepar != NULL){
+        libro * lib = (libro*) treepar->value;
+        par = searchTreeMap(lib -> pal_titulo, palabra);
+        if (par == NULL){
+            printf("Este titulo no existe en la libreria!");
+        return;
+        }
+        else{
+            lib = (libro*) par->value;
+            printf("-----------------------------------------------------------------\n");
+            printf("-->Titulo: %-52s Id: %-14s  |\n",lib -> titulo, lib -> book_id);
+            printf("                                                                |\n");
+            printf("-----------------------------------------------------------------\n");
+            }
+    TreePair * treepar = nextTreeMap(libros_ord);
+    }  
 }
 
 void mostrar_ord(libreria * l){
