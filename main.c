@@ -20,13 +20,12 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
-            printtitulo(librer);
+            printpaltest(librer);
             getchar();
             break;
         case mostrar_ordenado:
-            /*
-                m_orden();
-            */
+            mostrar_ord(librer);
+            getchar();
             break;
         case buscar_titulo:
             //busc

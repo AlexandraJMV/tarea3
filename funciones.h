@@ -25,6 +25,7 @@ void printpaltest(libreria* libreria);
 
 void top_frecuencia(libreria * lib);
 
+void mostrar_ord(libreria * libros);
 
 void printtitulo(libreria* libreria);
 

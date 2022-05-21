@@ -111,7 +111,7 @@ const char * extract_title(char * lin)
     {
         lin[nextline-lin] = '\0';
     }
-    return _strdup(lin+ini+4); // +4 para compensar la basura :(
+    return _strdup(lin+ini); // +4 para compensar la basura :(
 }
 
 void minusc(char * str)
@@ -382,7 +382,6 @@ void find_frec(List * l, palabra * p, int * max)
     palabra * curr = (palabra*)firstList(l);
     while (curr != NULL)
     {
-        //printf("frecuencias comp[aradas %f %f\n", curr->frecuencia, p->frecuencia);
         if(curr->frecuencia == p->frecuencia)
         {
             pushCurrent(l, p);
@@ -396,13 +395,12 @@ void find_frec(List * l, palabra * p, int * max)
             break;
         }
         curr = (palabra*) nextList(l);
-        if (curr == NULL)
-        {
-            (*max)++;
-            pushBack(l, p);
-        }
+        //if(curr == NULL)
+        //{
+        //    (*max)++;
+        //    pushBack(l, p);
+        //}
     }
-
 }
 
 List * find_top_frecuencia(libro * lib)
@@ -432,7 +430,7 @@ List * find_top_frecuencia(libro * lib)
         else if(pal->frecuencia > liminf)
             find_frec(top, pal, &limit);
 
-        if(limit>10)
+        if(limit>=10)
         {
             elim_liminf(top, &liminf);
             limit --;
@@ -484,16 +482,19 @@ void top_frecuencia(libreria * lib)
     }
 }
 //muestra los documentos ordenados alfabeticamente y sus ids.
+void mostrar_ord(libreria * libros){
+    TreeMap * libros_ord = libros->libros_ord;
 
-void mostrar_ord(List* libros_ord){
-    libro * lib = (libro*)firstList(libros_ord);
-    while(lib =! NULL){
+    TreePair * par = firstTreeMap(libros_ord);
+    if(par==NULL)return;
+    while(par != NULL){
+        libro * lib = (libro*) par->value;
         printf("-----------------------------------------------------------------\n");
-        printf("-->Titulo: %-43s Id: %9s |\n",lib -> titulo, lib -> book_id);
-        printf("Palabras: %-43s Caracteres: %9s |\n",lib -> pal_tot, lib -> char_tot);
+        printf("-->Titulo: %-40s Id: %9s |\n",lib -> titulo, lib -> book_id);
+        printf("Palabras: %-23ld Caracteres: %9ld |\n",lib -> pal_tot, lib -> char_tot);
         printf("                                                                |\n");
         printf("-----------------------------------------------------------------\n");
-        lib=(libro*)nextList(libros_ord);
+        par=nextTreeMap(libros_ord);
     } 
     return;
 }
