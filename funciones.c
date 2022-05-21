@@ -611,6 +611,7 @@ void buscar_tit(libreria *l){
     int pos = 0;
     TreeMap * libros_ord = l->libros_ord;
     TreePair * treepar = firstTreeMap(libros_ord);
+
     while(1){
         char pal[MAXCHAR];
         get_pal(palabra, pal, &pos);
