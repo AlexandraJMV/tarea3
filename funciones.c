@@ -14,7 +14,7 @@ typedef struct palabra{
     float relevancia;
 }palabra;
 
-typedef struct libro{
+typedef struct libro{   
     char titulo[MAXCHAR];
     char book_id[MAXCHAR];
     TreeMap * pal_titulo;
@@ -93,33 +93,6 @@ void get_pal(char * str, char * ret , int * prev_pos)
     }
     ret[i] = '\0';
     return;
-}
-
-const char * extract_title(char * lin)
-{
-    char tit[MAXCHAR];
-    int i=0;
-    int ini = strlen(FIRSTLIN_FORMAT)+3; // +3 para compensar la basura :(
-    
-    char * p = strstr(lin, ", by");
-    if(p)
-    {
-        for(ini ; ini<p-lin ; ini++)
-        {
-            tit[i] = lin[ini];
-            i++;
-        }
-        tit[i] = '\0';
-
-        return _strdup(tit);
-    }
-
-    char * nextline = strstr(lin, "\n");
-    if(nextline)
-    {
-        lin[nextline-lin] = '\0';
-    }
-    return _strdup(lin+ini);
 }
 
 void minusc(char * str)
@@ -229,47 +202,114 @@ libro* create_book(char * id)
     return lb;
 }
 
+/* Funcion borra una cadena dentro de otra, asumiendo que existe y la continua un espacio en la cadena a borrar */
+void delete_strstr(char * ret, char * del)
+{
+    int len = strlen(del)+ 1;
+    int fin_str = strlen(ret) - len;
+    
+    char * p = strstr(ret, del);
+    for(int i=(p-ret) ; ret[i] != '\n' && ret[i] != '\0' && len >0 ; i++)
+    {
+        ret[i] = ret[i+len];
+    }
+    
+    ret[fin_str] = '\0';
+}
+
+/* Elimina espacios del inicio de una cadena pre-concatenacion */
+void elim_edgespaces(char * str)
+{
+    int is_start = 0, new_ini = 0;
+    
+    for(int i=0 ; str[i] != '\0' && str[i] != '\n' ; i++)
+    {
+        if(is_start)
+        {
+            break;
+        }
+        else
+        {
+            if (str[i] != ' ') is_start = 1;
+            else new_ini ++;
+            continue;
+        }
+    }
+    
+    for(int i = 0; str[i] != '\0' && str[i] != '\n' ; i++)
+    {
+        str[i] = str[new_ini];
+        new_ini++;
+    }
+}
+
 libro* read_book(char * arch, FILE * file)
 {
     libro * lb;
     char linea[MAXLIN];
-    char aux_titl[MAXLIN];
-    int lin = 0, start=0;
+    char aux_titl[MAXLIN] = "\0";
+    int is_title = 0, start=0, cont = 0;
 
     lb = create_book(arch);
 
     while(fgets(linea, MAXLIN, file) != NULL)
     {
-        if (lin == 0) { // Extrae titulo desde la primera linea
-            if(linea[0] == '\n' || linea[0] == '\0')
-            {
-                strcpy(lb->titulo, extract_title(aux_titl));
-                guardar_palabras(lb, lb->pal_titulo, lb->titulo);
-                
-                lin = 1;
-                continue;
-            }
-
-            char * p = strstr(aux_titl,"\n");
-            if(p)
-            {
-                aux_titl[p-aux_titl] = ' ';
-            }
-            strcat(aux_titl, linea);
+        /* Lee titulo ubicado antes del comienzo de la lectura */
+        if(start != 1 && is_title == 0)
+        {
+            if(strstr(linea, TITLE_FORMAT) != NULL)
+                is_title= 1;
+            
+            char * e = strstr(linea, TITLE_FORMAT);
+            if (e)
+                delete_strstr(linea, TITLE_FORMAT);
         }
 
-        if (start != 1) // Encuentra el simbolo *** paraempezar con la lectura de palabras del texto.
+        if(start != 1  && is_title == 1)
+        {
+            if(linea[0] == '\n' || linea[0] == '\0')
+            {
+
+                char * e = strstr(aux_titl, "\n");
+                if(e)
+                    aux_titl[e-aux_titl] = '\0';
+
+                strcpy(lb->titulo, aux_titl);
+                guardar_palabras(lb, lb->pal_titulo, lb->titulo);
+
+                is_title ++;
+                continue;
+            }
+            else
+            {
+                cont++;
+                if(cont>1)
+                {
+                    elim_edgespaces(linea);
+                    char * p = strstr(aux_titl, "\n");
+                    if(p)
+                        aux_titl[p-aux_titl] = ' ';
+                }
+                strcat(aux_titl, linea);
+            }
+                
+        }
+
+
+        /* Encuentra el simbolo *** paraempezar con la lectura de palabras del texto. */
+        if (start != 1) 
         {
             if (strstr(linea, STRT_FORMAT) != NULL)
                 start = 1;
             continue;
         }
 
-        if (start == 1) // Encuentra *** para terminar la lectura
+        /* Encuentra *** para terminar la lectura */
+        if (start == 1) 
             if (strstr(linea, END_FORMAT) != NULL)
                 break;
 
-        guardar_palabras(lb, lb->pal_libro, linea);
+        if(start) guardar_palabras(lb, lb->pal_libro, linea);
     }
     return lb;
 }
@@ -288,6 +328,7 @@ libro* importar(char * arch)
 
     book = read_book(arch, entrada);
     fclose(entrada);
+    free(entrada);
     return book;
 }
 
@@ -310,7 +351,13 @@ void cargar_docs(libreria * Libreria)
         libro * lib = importar(doc);
         if (lib != NULL)
         {
-            insertTreeMap(Libreria->libros_ord, lib->titulo, lib);
+            char min_title[MAXCHAR];
+            strcpy(min_title, lib->titulo);
+            minusc(min_title);
+
+            printf("%s -> %s\n", lib->titulo, min_title);
+
+            insertTreeMap(Libreria->libros_ord, _strdup(min_title), lib);
             Libreria->libros_tot ++;
             cont++;
         }
@@ -355,19 +402,14 @@ float elim_liminf(List * l, float liminf)
 }
 
 
-float elim_liminf_relev(List * l, float liminf)
+float new_lim(List * l)
 {
-    float auxlim = liminf;
     float new_lim;
 
     palabra * curr = (palabra*)firstList(l);
     while (curr != NULL)
     {
-        if(curr->relevancia == auxlim)
-        {
-            popCurrent(l);
-        }
-        else new_lim = curr->relevancia;
+        new_lim = curr->relevancia;
         curr = (palabra*) nextList(l);
     }
 
@@ -404,7 +446,7 @@ int insert_relv(List * l, palabra * p)
         if(curr->relevancia == p->relevancia)
         {
             pushCurrent(l, p);
-            return 0 ;
+            return 1 ;
         } 
         else if(curr->relevancia < p->relevancia)
         {
@@ -431,7 +473,7 @@ List * find_top_frecuencia(libro * lib)
     int cont = 0;
 
     TreePair * palpair = firstTreeMap(lib->pal_libro);
-    if (palpair==NULL) printf("no hay palabras wtf\n");
+    if (palpair==NULL) printf("no hay palabras guardadas D: !!!!!\n");
     while(palpair != NULL)
     {
         cont++;
@@ -534,7 +576,7 @@ void find_relev(libro * lib, libreria *  libreria)
 
     while (par != NULL)
     {
-        palabra * pal = (palabra *)par->value; // extraccion de la palabra
+        palabra * pal = (palabra *)par->value;
 
         /* Calcular la relevancia */
         en_doc = pal_en_doc(pal, libreria);
@@ -545,26 +587,20 @@ void find_relev(libro * lib, libreria *  libreria)
         else 
             pal->relevancia = 0;
 
-        //printf("%ld %ld %ld %ld\n", pal->ocurrencia, lib->pal_tot, libreria->libros_tot, en_doc);
-
         /* Guardar en lista */
-
-        if(pal->relevancia == limsup)
-            pushFront(lib->pal_relevantes, pal);
-        else if(pal->relevancia > limsup)
-            {
-                pushFront(lib->pal_relevantes,pal);
-                limit++;
-                limsup = pal->relevancia;
-            }
-        else if (pal->relevancia == liminf)
-            pushBack(lib->pal_relevantes, pal);
-        else if (pal->relevancia > liminf)
+        if(pal->relevancia >= limsup)
+        {
+            pushFront(lib->pal_relevantes,pal);
+            limit++;
+            limsup = pal->relevancia;
+        }
+        else if (pal->relevancia >= liminf)
             if(insert_relv(lib->pal_relevantes, pal)) limit ++;
 
         if(limit>=10)
         {
-            liminf = elim_liminf_relev(lib->pal_relevantes, liminf);
+            liminf = new_lim(lib->pal_relevantes);
+            popBack(lib->pal_relevantes);
             limit--;
         }
         par = nextTreeMap(lib->pal_libro);
@@ -578,68 +614,83 @@ void mostrar_relevancia(libreria * libreria)
     libro * lib;
     TreePair * par;
     palabra * p;
+    int cont= 0;
 
     
-    printf("Ingrese IDE del libro que quiere buscar : ");
+    printf("Ingrese titulo del libro que quiere buscar : ");
     fgets(title, MAXCHAR, stdin);
     char * pos = strstr(title, "\n");
     if(pos) title[pos-title] = '\0';
+
+    minusc(title);
+    char * aux = strstr(title, "\n");
+    if (aux)
+        title[aux-title] = '\0';
     
     par = searchTreeMap(libreria->libros_ord, title);
     if (par == NULL){
         printf("Este libro no existe en la libreria!");
         return;
     } 
-    else lib = (libro*) par->value;
-
-    lib = search_id(libreria->libros_ord, title);
-    if (lib == NULL) return;
+    
+    lib = (libro*) par->value;
 
     find_relev(lib, libreria);
 
     p = (palabra*) firstList(lib->pal_relevantes);
     while (p != NULL)
     {
-        printf("Palabra: %s\nRelevancia: %f\n\n", p->palabra, p->relevancia);
+        if(p->relevancia > 0) {
+            printf("Palabra: %s\nRelevancia: %f\n\n", p->palabra, p->relevancia);
+            cont++;
+        }
         p = (palabra*) nextList(lib->pal_relevantes);
     }
+    if (cont == 0) printf("No hay ninguna palabra relevante (mayor que 0 !!)\n");
 }
 
-void buscar_tit(libreria *l){
+void buscar_tit(libreria *l)
+{
     char palabra[MAXCHAR];
     libro * lib;
-    TreePair * par;
-    int pos = 0;
+    TreePair * par_palabra;
+    
     TreeMap * libros_ord = l->libros_ord;
     TreePair * treepar = firstTreeMap(libros_ord);
-    while(1){
-        char pal[MAXCHAR];
-        get_pal(palabra, pal, &pos);
-        printf("Ingrese palabras para buscar titulos, separados por espacios\n");
-        fgets(palabra, MAXCHAR, stdin);
-        minusc(palabra);
+    
 
-        if (treepar == NULL)return;
+    printf("Ingrese palabras para buscar titulos, separados por espacios\n");
+    fgets(palabra, MAXCHAR, stdin);
 
-        while (treepar != NULL){
-            libro * lib = (libro*) treepar->value;
+    while(treepar != NULL)
+    {
+        int aux = 1;
+        int pos = 0;
+        lib = (libro*) treepar->value;
+        
+        while(1){
+            char pal[MAXCHAR];
             get_pal(palabra, pal, &pos);
-            par = searchTreeMap(lib -> pal_titulo, palabra);
-            if (par == NULL){
-                printf("Este titulo no existe en la libreria!");
-            return;
-            } 
-            else{
-                lib = (libro*) par->value;
-                printf("-----------------------------------------------------------------\n");
-                printf("-->Titulo: %-52s Id: %-14s  |\n",lib -> titulo, lib -> book_id);
-                printf("                                                                |\n");
-                printf("-----------------------------------------------------------------\n");
+            minusc(pal);
+            if (pal[0] =='\0' || pal[0] == '\n') break;
+            par_palabra = searchTreeMap(lib -> pal_titulo, pal);
+            if (par_palabra == NULL)
+            {
+                aux = 0;
+                break;
             }
-            TreePair * treepar = nextTreeMap(libros_ord);
-            return;
         }
+
+        if(aux != 0){
+            printf("-----------------------------------------------------------------\n");
+            printf("-->Titulo: %-52s\n Id: %-57s  |\n",lib -> titulo, lib -> book_id);
+            printf("                                                                |\n");
+            
+        }
+        treepar = nextTreeMap(libros_ord);
+
     }
+    printf("-----------------------------------------------------------------\n");
 }
 
 void mostrar_ord(libreria * l){
@@ -655,7 +706,7 @@ void mostrar_ord(libreria * l){
     while(treepar != NULL){
         libro * lib = (libro*) treepar->value;
         printf("-----------------------------------------------------------------\n");
-        printf("-->Titulo: %-52s |\n",lib -> titulo);
+        printf("-->Titulo: %-53s|\n",lib -> titulo);
         printf("Palabras: %-10ld Caracteres: %-10ld Id: %-14s  |\n",lib -> pal_tot, lib -> char_tot, lib->book_id);
         printf("                                                                |\n");
         printf("-----------------------------------------------------------------\n");
