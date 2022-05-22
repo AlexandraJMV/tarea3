@@ -20,6 +20,7 @@ typedef struct libro{
     TreeMap * pal_titulo;
     TreeMap * pal_libro;
     List * pal_relevantes;
+    float relevante;
     long pal_tot;
     long char_tot;
 }libro;
@@ -740,62 +741,73 @@ void mostrar_ord(libreria * l){
 
     printf("Hay un total de %ld libros\n", l->libros_tot);
     return;
+    
 }
 
+void mostrarListaOrdenadaRelevancia(List * libros){
+    printf("Libros ordenados Segun la relevancia de la palabra : \n");
+    libro * lib=firstList(libros);
+    while(lib != NULL){
+        printf("-----------------------------------------------------------------\n");
+        printf("-->Titulo: %-52s |\n",lib -> titulo);
+        printf("Palabras: %-10ld Caracteres: %-10ld Id: %-14s  |\n",lib -> pal_tot, lib -> char_tot, lib->book_id);
+        printf("                                                                |\n");
+        printf("-----------------------------------------------------------------\n");
+        lib = nextList(libros);
+    }
+}
 
-/*
-    6. Buscar por palabra. El usuario ingresa una palabra y la aplicación muestra los libros (id y título) 
-    que tienen la palabra en su contenido. Los libros deben ser ordenados por la relevancia de la palabra buscada.  
-    Por ejemplo, si busco “Jesús”, la biblia debería aparecer en primer lugar.
-    Si busco “mancha”, el Quijote debería salir en primer lugar.
-    
-    7. Mostrar palabra en su contexto dentro del libro. 
-    El usuario ingresa el título de un libro y el de una palabra a buscar. 
-    La aplicación muestra las distintas apariciones de la palabra en el contexto del documento, es decir,
-    para cada aparición, se muestran algunas palabras hacia atrás y hacia adelante de la palabra buscada
-    (por ejemplo, la línea completa en la que aparece la palabra, o 5 palabras hacia atrás y 5 hacia adelante).
-
-    solucion: 1)En buscar palabra , crear funcion que entregue los libros en el que estan presente la palabra y funcion
-                relevancia_palabra para ordenar el mostrar lista de libro segun relevancia.(mayor el num = mayor relevancia)
-              2)Por cada aparcion de una palabra mostrar la linea que lo contiene.
-
-
-*/
 
 void buscarPalabra(libreria * lib){
 
     char palabra[MAXCHAR];
     List * top_Relevancia=createList();
+    TreeMap * MapLib =lib->libros_ord;
 
-    printf("Ingrese la palabra a buscar:\n");
-    scanf("%s",palabra);
-    getchar;
-
-    minusc(palabra);
-
-    TreePair * trepair=firstTreeMap(lib->libros_ord);
-
-    if (trepair == NULL){
-        printf("No hay libros agregados.");
+    TreePair * trepair = firstTreeMap(MapLib);
+    if(trepair == NULL){
+        printf("\nNo hay ningun libro guardado!,intenta agregar uno\n");
         return;
     }
+    printf("Ingrese la palabra a buscar:");
+    fgets(palabra, MAXCHAR, stdin);
+    minusc(palabra);
+    printf("-->%s",palabra);
 
     while(trepair != NULL){
         libro * libros=(libro *)trepair->value;
-        if (searchTreeMap(libros->pal_libro,palabra)->value != NULL){
+        TreePair * pair;
+        int aux=1;
+        int pos=0;
+
+        while(1){
+            char pal[MAXCHAR];
+            get_pal(palabra, pal, &pos);
+            minusc(pal);
+            if (pal[0] =='\0' || pal[0] == '\n') break;
+            pair = searchTreeMap(libros->pal_libro, pal);
+            if (pair == NULL)
+            {
+                aux = 0;
+                break;
+            }
+        }
+        if(aux != 0){
             pushBack(top_Relevancia,libros);
         }
 
-        trepair=nextTreeMap(lib->libros_ord);
+        trepair=nextTreeMap(MapLib);
     }
-    if(firstList(top_Relevancia) == NULL){
-        printf("la palabra que buscas no esta presente en ningun libro");
+    if (firstList(top_Relevancia)==NULL){
+        printf("La palabra que buscas no se encuentra en ninguno de los libros");
+        return;
     }
-    else{
-        //mostrarListaOrdenadaRelevancia(listaLib);
-    }   
+    mostrarListaOrdenadaRelevancia(top_Relevancia);
+    
 }
 
 void contexto_palabra(libreria * lib){
+    
+    
     return;
 }

@@ -1,33 +1,49 @@
-# tarea3
- //あああああああああああああああああああああ
- 
- notas (Ale) :
- En algun punto, comprobar la existencia de un libro con tal de evitar re-lecturas
- o libros duplicados.
+“Aplicación Biblioteca"
 
- He decidido utilizar hashmap para las palabras del texto pues, a diferencia del
- los titulos del libro, no necesitamos orden, la busqueda en hashmap es mas optima que treemap.
+Esta Aplicacion permite indexar gran cantidad de libros, en los cuales se puede llevar a cabo busqueda de palabras, obtener la relevancia y frecuencia que tienen estas en un libro, ademas permite la creacion de una libreria por orden alfabetico y con informacion de cada libro que se ingrese.
 
- Leer primera linea del archivo contiene basura,verificar si vale lapena cambiarlo.
+Instrucciones de uso del Programa.
 
- Aun no se como arreglar conlcitos en texto, sigue apareciendo basura al leer primera linea (4 caracteres de basura)
+1.	Descargar el archivo .zip
+2.	Descomprimir en carpeta de preferencia
+3.	Hacer click derecho + shift en la carpeta y abrir “PowerShell”
+4.	Escribir el siguiente comando para compilar un .exe
+gcc *.c -o ejecutable.exe 5. Escribir el siguiente comando para correr el .exe generado ejecutable.exe
 
- Lectura de titulo es demasiado rigido :/
 
- Quiza,eventualmente, buscar soluciones que no requieran sumar a fuerza bruta 4 caracteres para leer bien la primera linea!
+*Comentarios y recomendaciones acerca del programa y sus funciones.*
 
-anotaciones: numeros no secontaran comopalabras
-numeros romanos SI seran palabras
-en palabras del tipo: I'll solo sera guardada la parte antes del ' = I
-^^^^^^^^FACIL DE ARREGLAR.
+1)Antes de utilizar el resto de funciones del programa lo primero que debe hacer, es importar cada uno de los libros a trabajar. (1ºFuncion).
 
-IMPIRTANTE REVISAR QUE TEXTO EXISTA ANTES DE VOLVER A POTENCIALMENTE ABRIRLO
 
-Importnate: Crear metodos para evitar re leer libros o re calcular su frecuencia!!
 
-frecuencia imprimre 11 valores 4sum reason
 
-frecuencias repetidas se suentan como una sola en mostrar 10 frecuencias mas repetidas
 
-espacios y caracteres especiales no se cuentan como caracteres
 
+*Co-evaluación grupal.*
+
+Este punto consiste en una lista de cualidades positivas y por mejorar de cada integrante, las cuales se deberán tener en cuenta para mejorar el trabajo en equipo en un futuro. [ + ] = Positivo [ ! ] = Por mejorar.
+
+-Antonia Acevedo
+
+AC[!]
+
+AM[+]
+
+JM[+]
+
+-Alexandra Mendoza
+
+AC[+]
+
+AM[+]
+
+JM[+]
+
+-Jorge Morgado
+
+AC[+] 
+
+AM[+]
+
+JM[+]
