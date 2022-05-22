@@ -564,6 +564,15 @@ long pal_en_doc(palabra * p, libreria * libreria)
     return cont;
 }
 
+/**********************************************************************
+Encuentra las palabras mas relevantes, primero que nada hay que calcular 
+la relevancia de cada una con la formula entreda, la cual es con las 
+ocurrencias de las palabras en el documento dividido por la cantidad de 
+palabras total del documento, multiplicado por el logaritmo  del numero
+de documentos partido en los documentos que contienen dicha palabra, luego 
+de esto se agrega a la lista  que contiene el libro de forma ordenada.
+**********************************************************************/
+
 void find_relev(libro * lib, libreria *  libreria)
 {
     long en_doc, limit = 0;
@@ -607,7 +616,11 @@ void find_relev(libro * lib, libreria *  libreria)
     }
     return;
 }
-
+/**********************************************************************
+Muestra la relevancia de la palabra que esta buscando, imprimiendo dicha 
+palabra buscada y su relevancia dentro de los documentos. Si no se encuentra
+la palabra indicara que no hay relevacia mayor que 0.
+**********************************************************************/
 void mostrar_relevancia(libreria * libreria)
 {
     char title[MAXCHAR];
@@ -648,6 +661,13 @@ void mostrar_relevancia(libreria * libreria)
     }
     if (cont == 0) printf("No hay ninguna palabra relevante (mayor que 0 !!)\n");
 }
+
+/**********************************************************************
+Busca titulos de libros por palabras separas por espacio, imprimiendo
+respectivamente el titulo del libro y su id, el titulo buscado debe tener
+si o si todas las palabras buscadas, en cualquier orden pero todas, incluso 
+puede tener mas palabras que las que se buscan. imprimiendolos
+**********************************************************************/
 
 void buscar_tit(libreria *l)
 {
@@ -692,6 +712,12 @@ void buscar_tit(libreria *l)
     }
     printf("-----------------------------------------------------------------\n");
 }
+
+/**********************************************************************
+Muestra titulos e informacion sobre los libros en orden alfabetico, esta 
+informacion consta de las palabras que contiene el libro, los caracteres de 
+todo el texto y la id correspondiente. imprimiendolos
+**********************************************************************/
 
 void mostrar_ord(libreria * l){
     TreeMap * libros_ord = l->libros_ord;
