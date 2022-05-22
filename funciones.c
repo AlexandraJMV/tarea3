@@ -621,8 +621,15 @@ long pal_en_doc(palabra * p, libreria * libreria)
     return cont;
 }
 
+/**********************************************************************
+Encuentra las palabras mas relevantes, primero que nada hay que calcular 
+la relevancia de cada una con la formula entreda, la cual es con las 
+ocurrencias de las palabras en el documento dividido por la cantidad de 
+palabras total del documento, multiplicado por el logaritmo  del numero
+de documentos partido en los documentos que contienen dicha palabra, luego 
+de esto se agrega a la lista  que contiene el libro de forma ordenada.
+**********************************************************************/
 
-/* Calculo de relevancia e insercion en lista de palabras mas relevantes del libro */
 void find_relev(libro * lib, libreria *  libreria)
 {
     long en_doc, limit = 0;
@@ -665,8 +672,11 @@ void find_relev(libro * lib, libreria *  libreria)
     }
     return;
 }
-
-/* Imput titulo de libro para la  busqueda y calculo de relevancia, llamado a funcion e impresion de lista */
+/**********************************************************************
+Muestra la relevancia de la palabra que esta buscando, imprimiendo dicha 
+palabra buscada y su relevancia dentro de los documentos. Si no se encuentra
+la palabra indicara que no hay relevacia mayor que 0.
+**********************************************************************/
 void mostrar_relevancia(libreria * libreria)
 {
     char title[MAXCHAR];
@@ -710,6 +720,13 @@ void mostrar_relevancia(libreria * libreria)
     if (cont == 0) printf("No hay ninguna palabra relevante (mayor que 0 !!)\n");
     else printf("-----------------------------\n");
 }
+
+/**********************************************************************
+Busca titulos de libros por palabras separas por espacio, imprimiendo
+respectivamente el titulo del libro y su id, el titulo buscado debe tener
+si o si todas las palabras buscadas, en cualquier orden pero todas, incluso 
+puede tener mas palabras que las que se buscan. imprimiendolos
+**********************************************************************/
 
 void buscar_tit(libreria *l)
 {
@@ -763,6 +780,12 @@ void buscar_tit(libreria *l)
     if(cont==0) printf("No se ha encontrado ningun libro con esta palabra!\n");
 }
 
+/**********************************************************************
+Muestra titulos e informacion sobre los libros en orden alfabetico, esta 
+informacion consta de las palabras que contiene el libro, los caracteres de 
+todo el texto y la id correspondiente. imprimiendolos
+**********************************************************************/
+
 void mostrar_ord(libreria * l){
     TreeMap * libros_ord = l->libros_ord;
 
@@ -785,62 +808,146 @@ void mostrar_ord(libreria * l){
 
     printf("Hay un total de %ld libros\n", l->libros_tot);
     return;
+    
+}
+palabra * find_relev2(char * palab,libro * lib, libreria *  libreria)
+{
+    long en_doc;
+    minusc(palab);
+
+    TreePair * par = searchTreeMap(lib->pal_libro,palab);
+
+    palabra * pal = (palabra *)par->value;
+
+    /* Calcular la relevancia de la palabra*/
+    en_doc = pal_en_doc(pal, libreria);
+
+    if (en_doc != 0)
+        pal->relevancia = (float) pal->ocurrencia / (float) lib->pal_tot
+        * log(libreria->libros_tot/en_doc);           
+    else 
+        pal->relevancia = 0;
+    return pal;
+    
 }
 
 
-/*
-    6. Buscar por palabra. El usuario ingresa una palabra y la aplicación muestra los libros (id y título) 
-    que tienen la palabra en su contenido. Los libros deben ser ordenados por la relevancia de la palabra buscada.  
-    Por ejemplo, si busco “Jesús”, la biblia debería aparecer en primer lugar.
-    Si busco “mancha”, el Quijote debería salir en primer lugar.
-    
-    7. Mostrar palabra en su contexto dentro del libro. 
-    El usuario ingresa el título de un libro y el de una palabra a buscar. 
-    La aplicación muestra las distintas apariciones de la palabra en el contexto del documento, es decir,
-    para cada aparición, se muestran algunas palabras hacia atrás y hacia adelante de la palabra buscada
-    (por ejemplo, la línea completa en la que aparece la palabra, o 5 palabras hacia atrás y 5 hacia adelante).
+void mostrarListaOrdenadaRelevancia(libreria * libreria, List * libros,char * pal){
+    printf("Libros con precencia de la palabra : \n");
+    libro * lib=firstList(libros);
 
-    solucion: 1)En buscar palabra , crear funcion que entregue los libros en el que estan presente la palabra y funcion
-                relevancia_palabra para ordenar el mostrar lista de libro segun relevancia.(mayor el num = mayor relevancia)
-              2)Por cada aparcion de una palabra mostrar la linea que lo contiene.
+    while(lib != NULL){
+        //palabra * relev=find_relev2(pal,lib,libreria);
+        printf("-----------------------------------------------------------------\n");
+        printf("-->Titulo: %-52s |\n",lib -> titulo);
+        printf("Palabra: %-10s   Id: %-52s                                      |\n",pal, lib->book_id);
+        printf("                                                                |\n");
+        printf("-----------------------------------------------------------------\n");
+        lib = nextList(libros);
+    }
+}
 
-
-*/
 
 void buscarPalabra(libreria * lib){
 
-    char palabra[MAXCHAR];
+    char palabraBus[MAXCHAR];
     List * top_Relevancia=createList();
+    TreeMap * MapLib =lib->libros_ord;
 
-    printf("Ingrese la palabra a buscar:\n");
-    scanf("%s",palabra);
-    getchar;
-
-    minusc(palabra);
-
-    TreePair * trepair=firstTreeMap(lib->libros_ord);
-
-    if (trepair == NULL){
-        printf("No hay libros agregados.");
+    TreePair * trepair = firstTreeMap(MapLib);
+    if(trepair == NULL){
+        printf("\nNo hay ningun libro guardado!,Intenta agregando uno.\n");
         return;
     }
+    printf("Ingrese la palabra a buscar:");
+    fgets(palabraBus, MAXCHAR, stdin);
+    minusc(palabraBus);
+    printf("-->%s",palabraBus);
 
     while(trepair != NULL){
         libro * libros=(libro *)trepair->value;
-        if (searchTreeMap(libros->pal_libro,palabra)->value != NULL){
+        TreePair * pair;
+        
+        int aux=1;
+        int pos=0;
+
+        while(1){
+            char pal[MAXCHAR];
+            get_pal(palabraBus, pal, &pos);
+            minusc(pal);
+            if (pal[0] =='\0' || pal[0] == '\n') break;
+            pair = searchTreeMap(libros->pal_libro, pal);
+            if (pair == NULL)
+            {
+                aux = 0;
+                break;
+            }
+        }
+        
+        if(aux != 0){
             pushBack(top_Relevancia,libros);
         }
 
-        trepair=nextTreeMap(lib->libros_ord);
+        trepair=nextTreeMap(MapLib);
     }
-    if(firstList(top_Relevancia) == NULL){
-        printf("la palabra que buscas no esta presente en ningun libro");
+    if (firstList(top_Relevancia)==NULL){
+        printf("La palabra que buscas no se encuentra en ninguno de los libros");
+        return;
     }
-    else{
-        //mostrarListaOrdenadaRelevancia(listaLib);
-    }   
+    
+    mostrarListaOrdenadaRelevancia(lib,top_Relevancia,palabraBus);
+    
 }
 
-void contexto_palabra(libreria * lib){
+void contexto_palabra(libreria * libros){
+    
+
+    libro * lib;
+    char titulo[MAXCHAR];
+    TreePair * pair;
+    char palabra[MAXCHAR];
+
+    
+    printf("Ingrese titulo del libro en el cual buscara la palabra: ");
+    fgets(titulo, MAXCHAR, stdin);
+    char * pos = strstr(titulo, "\n");
+    if(pos) titulo[pos-titulo] = '\0';
+    minusc(titulo);
+
+    char * aux = strstr(titulo, "\n");
+    if (aux)
+        titulo[aux-titulo] = '\0';
+    
+    pair = searchTreeMap(libros->libros_ord, titulo);
+    if (pair == NULL){
+        printf("Este libro no existe en la libreria!");
+        return;
+    } 
+    
+    lib = (libro*) pair->value;
+    
+    printf("Ingresa La palabra a la cual buscar su contexto: ");
+    fgets(palabra, MAXCHAR, stdin);
+    minusc(palabra);
+    printf("Tu Palabra-->%s\n",palabra);
+    printf("-----------------------------------------------------------------\n");
+    
+    FILE * entrada;
+    /*REFERENCIA:
+        FILE *f = fopen("main.c","r");
+        char x[1024];
+        while (1) {
+            int pos = ftell(f);
+            if (fscanf(f, " %1023s", x) == 1)
+                printf("%s: pos %d\n",x,pos);
+            else break;
+        }
+
+        fseek(f,141,SEEK_SET);
+        fscanf(f, " %1023s", x);
+        printf("pos 141: %s\n",x);
+    */
+
+
     return;
 }
