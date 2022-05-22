@@ -46,7 +46,9 @@ int main(void)
             getchar();
             break;
         case cntxt:
-            // contexto_palabra();
+            system("cls");
+            contexto_palabra(librer);
+            getchar();
             break;
         case end:
             printf("Saliendo del programa...\n");
