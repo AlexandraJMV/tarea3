@@ -41,8 +41,9 @@ int main(void)
             getchar();
             break;
         case buscar_palabra:
-            // buscar_palabra(librer);
-            getchar;
+            system("cls");
+            buscarPalabra(librer);
+            getchar();
             break;
         case cntxt:
             // contexto_palabra();

@@ -20,6 +20,7 @@ typedef struct libro{
     TreeMap * pal_titulo;
     TreeMap * pal_libro;
     List * pal_relevantes;
+    float relevante;
     long pal_tot;
     long char_tot;
 }libro;
@@ -583,13 +584,13 @@ void mostrar_relevancia(libreria * libreria)
     fgets(title, MAXCHAR, stdin);
     char * pos = strstr(title, "\n");
     if(pos) title[pos-title] = '\0';
-    /*
+    
     par = searchTreeMap(libreria->libros_ord, title);
     if (par == NULL){
         printf("Este libro no existe en la libreria!");
         return;
     } 
-    else lib = (libro*) par->value;*/
+    else lib = (libro*) par->value;
 
     lib = search_id(libreria->libros_ord, title);
     if (lib == NULL) return;
@@ -663,6 +664,7 @@ void mostrar_ord(libreria * l){
 
     printf("Hay un total de %ld libros\n", l->libros_tot);
     return;
+    
 }
 
 
@@ -685,42 +687,58 @@ void mostrar_ord(libreria * l){
 
 */
 
+void mostrarListaOrdenadaRelevancia(List * libros){
+    printf("Libros ordenados Segun la relevancia de la palabra : \n");
+    //libro * lib=firstList(libros);
+    /*while(lib != NULL){
+        printf("-----------------------------------------------------------------\n");
+        printf("-->Titulo: %-52s |\n",lib -> titulo);
+        printf("Palabras: %-10ld Caracteres: %-10ld Id: %-14s  |\n",lib -> pal_tot, lib -> char_tot, lib->book_id);
+        printf("                                                                |\n");
+        printf("-----------------------------------------------------------------\n");
+        lib = nextList(libros);
+    }*/
+}
 
 
 void buscarPalabra(libreria * lib){
 
     char palabra[MAXCHAR];
     List * top_Relevancia=createList();
+    TreeMap * MapLib =lib->libros_ord;
 
-    printf("Ingrese la palabra a buscar:\n");
-    scanf("%s",palabra);
-    getchar;
-
-    minusc(palabra);
-
-    TreePair * trepair=firstTreeMap(lib->libros_ord);
-
-    if (trepair == NULL){
-        printf("No hay libros agregados.");
+    TreePair * trepair = firstTreeMap(MapLib);
+    if(trepair == NULL){
+        printf("\nNo hay ningun libro guardado!,intenta agregar uno\n");
         return;
     }
+    printf("Ingrese la palabra a buscar:");
+    fgets(palabra, MAXCHAR, stdin);
+    minusc(palabra);
+
+    printf("%s",palabra);
 
     while(trepair != NULL){
         libro * libros=(libro *)trepair->value;
-        if (searchTreeMap(libros->pal_libro,palabra)->value != NULL){
+        TreePair * pair=(TreePair *)(searchTreeMap(libros->pal_libro,palabra));
+        
+        if (pair->value != NULL){
             pushBack(top_Relevancia,libros);
+            continue;
         }
 
-        trepair=nextTreeMap(lib->libros_ord);
+        trepair=nextTreeMap(MapLib);
     }
-    if(firstList(top_Relevancia) == NULL){
+    if((firstList(top_Relevancia)) == NULL){
         printf("la palabra que buscas no esta presente en ningun libro");
+        return;
     }
-    else{
-        //mostrarListaOrdenadaRelevancia(listaLib);
-    }   
+    mostrarListaOrdenadaRelevancia(top_Relevancia);
+    
+    return;
 }
 
 void contexto_palabra(libreria * lib){
+    
     return;
 }
