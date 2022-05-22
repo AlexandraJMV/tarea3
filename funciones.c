@@ -670,28 +670,26 @@ void buscar_tit(libreria *l)
         while(1){
             char pal[MAXCHAR];
             get_pal(palabra, pal, &pos);
-            minusc(palabra);
+            minusc(pal);
             if (pal[0] =='\0' || pal[0] == '\n') break;
-
             par_palabra = searchTreeMap(lib -> pal_titulo, pal);
             if (par_palabra == NULL)
             {
-                printf("centinela");
                 aux = 0;
                 break;
             }
         }
 
+        if(aux != 0){
+            printf("-----------------------------------------------------------------\n");
+            printf("-->Titulo: %-52s\n Id: %-57s  |\n",lib -> titulo, lib -> book_id);
+            printf("                                                                |\n");
+            
+        }
         treepar = nextTreeMap(libros_ord);
 
-        if(aux==0) continue;
-        else{
-            printf("-----------------------------------------------------------------\n");
-            printf("-->Titulo: %-52s Id: %-14s  |\n",lib -> titulo, lib -> book_id);
-            printf("                                                                |\n");
-            printf("-----------------------------------------------------------------\n");
-        }
-    }  
+    }
+    printf("-----------------------------------------------------------------\n");
 }
 
 void mostrar_ord(libreria * l){
