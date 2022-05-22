@@ -11,6 +11,7 @@ int main(void)
         system("cls");
         char str[MAXCHAR];
         int select;
+        char c;
 
         print_menu();
         fgets(str, MAXCHAR, stdin);
@@ -33,10 +34,12 @@ int main(void)
             getchar();
             break;
         case mayor_frecuencia:
+            system("cls");
             top_frecuencia(librer);
             getchar();
             break;
         case relevancia_Palabra:
+            system("cls");
             mostrar_relevancia(librer);
             getchar();
             break;
@@ -49,12 +52,11 @@ int main(void)
             break;
         case end:
             printf("Saliendo del programa...\n");
-            getchar();
             return 0;
             break;
         default:
             printf("Opcion no valida!\n");
-            getchar();
+            while((c = getchar()) != '\n' && c != EOF){}
             break;
         }
     }
