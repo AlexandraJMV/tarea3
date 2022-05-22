@@ -41,12 +41,8 @@ int main(void)
             getchar();
             break;
         case buscar_palabra:
-<<<<<<< HEAD
             system("cls");
             buscarPalabra(librer);
-=======
-            printf("Peo");
->>>>>>> d1225533233f46685ebb3bb7a3886838570678f4
             getchar();
             break;
         case cntxt:
