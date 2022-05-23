@@ -12,6 +12,8 @@ Esta aplicación permite indexar gran cantidad de libros en los cuales se puede 
 gcc *.c -o ejecutable.exe 
 5. Escribir el siguiente comando para correr el .exe generado : ejecutable.exe
 
++ **Importante:** A la hora de ejecutar el programa hay que agregar la carpeta con libros en carpeta de preferencia, nombre de esta debe ser "Libros"
+
 <br>
 <br>
 
