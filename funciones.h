@@ -5,9 +5,9 @@
 #define STRT_FORMAT "*** START OF"
 #define END_FORMAT "*** END OF"
 #define TITLE_FORMAT "Title:"
-#define LASTLIN_FORMAT ", by"
 #define PATH "Libros/"
-
+#define TXT_FORMAT ".txt"
+#define MAX_BLOQ 100
 enum op1{cargar=1, mostrar_ordenado, buscar_titulo, mayor_frecuencia,relevancia_Palabra, buscar_palabra, cntxt, end };
 
 typedef struct libreria libreria;
@@ -19,10 +19,6 @@ void cargar_docs(libreria * lib);
 int toselect(char * str);
 
 libreria * create_libreria();
-
-void printlibrostest(libreria * Libreria);
-
-void printpaltest(libreria* libreria);
 
 void top_frecuencia(libreria * lib);
 
