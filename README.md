@@ -15,7 +15,7 @@ gcc *.c -o ejecutable.exe 5. Escribir el siguiente comando para correr el .exe g
 
 1)Antes de utilizar el resto de funciones del programa lo primero que debe hacer, es importar cada uno de los libros a trabajar. (1ºFuncion).
 
-2)funciones con utilizacion del "Calculo de la relevancia", si no se agrega mas de un libro, todas las palabras tendran relevancia 0 y no entregara palabra relevantes.
+2)funciones con utilizacion del "Calculo de la relevancia", si no se agrega mas de un libro, todas las palabras tendran relevancia 0 y entregara todas las palabras con relevancia 0.
 
 
 
