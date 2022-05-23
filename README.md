@@ -34,7 +34,7 @@ Este punto consiste en una lista de cualidades positivas y por mejorar de cada i
 
 *_Antonia Acevedo_*
 
-AC[!]
+AA[!]Mejorar la resolucion de problemas a la hora de realizar funciones. Errores que aparecen a mediados que se realiza la funcion.
 
 AM[!] Se recomienda practica en cuanto ala resolucion de problemas / creacion de algoritmos. Realiza tareas solicitadas.
 
@@ -42,7 +42,7 @@ JM[+] Buen desempeño en sus funciones ,demuestra interes en el trabajo.
 
 *_Alexandra Mendoza_*
 
-AC[+]
+AA[+]Muy buen desempeño a la hora de realizar sus funciones y de forma eficiente, con la determinacion de ayudar.
 
 AM[+] Se realizan tareas solicitadas.
 
@@ -50,7 +50,7 @@ JM[+] Excelente lider grupal, y con muy buenas habilidades a la hora de resolver
 
 *_Jorge Morgado_*
 
-AC[+] 
+AA[+] Trabaja de forma efectiva y sin problemas.
 
 AM[+] Buen desempeño y resolucion de problemas, independiente. Buen desempeño.
 
