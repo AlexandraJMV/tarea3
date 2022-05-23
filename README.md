@@ -1,49 +1,55 @@
-“Aplicación Biblioteca"
+> “Aplicación Biblioteca"
 
-Esta Aplicacion permite indexar gran cantidad de libros, en los cuales se puede llevar a cabo busqueda de palabras, obtener la relevancia y frecuencia que tienen estas en un libro, ademas permite la creacion de una libreria por orden alfabetico y con informacion de cada libro que se ingrese.
+Esta aplicación permite indexar gran cantidad de libros en los cuales se puede llevar a cabo búsqueda de palabras, obtener la relevancia y frecuencia que tienen estas dentro de un libro, además permite la creación de una librería por orden alfabético y con información de cada libro que se ingrese.
 
-Instrucciones de uso del Programa.
+> Instrucciones de uso del Programa.
 
 1.	Descargar el archivo .zip
 2.	Descomprimir en carpeta de preferencia
 3.	Hacer click derecho + shift en la carpeta y abrir “PowerShell”
 4.	Escribir el siguiente comando para compilar un .exe
-gcc *.c -o ejecutable.exe 5. Escribir el siguiente comando para correr el .exe generado ejecutable.exe
+gcc *.c -o ejecutable.exe 
+5. Escribir el siguiente comando para correr el .exe generado : ejecutable.exe
 
 
-*Comentarios y recomendaciones acerca del programa y sus funciones.*
+>*Comentarios y recomendaciones acerca del programa y sus funciones.*
 
-1)Antes de utilizar el resto de funciones del programa lo primero que debe hacer, es importar cada uno de los libros a trabajar. (1ºFuncion).
++ Existen problemas en la lectura de caracteres no ASCII, estos no se contarán como palabras dentro del programa y se almacenará solamente la primera parte de la palabra que la contenga.
 
++ Números no serán considerados palabras, por lo que no se indexan en el programa.
 
++ Números representados por letras del alfabeto Inglés si se consideran en indexación.
 
++ Lecturas de título y contenido dependen fuertemente en el formato detectado en los libros de prueba de la tarea. No se leería contenido si no poseen ciertas características especifícas (Evidente en las primeras lineas de la cabecera de funciones)
 
++ Aparentemente no es necesarioimportar archivos para que funcione el programa, solo no habrá información para procesar.
 
++ Algunas funciones utilizadas en el programa presentan poca opotunidad de re-utilización fuera del contexto de la tarea.
 
-*Co-evaluación grupal.*
+> Co-evaluación grupal.
 
 Este punto consiste en una lista de cualidades positivas y por mejorar de cada integrante, las cuales se deberán tener en cuenta para mejorar el trabajo en equipo en un futuro. [ + ] = Positivo [ ! ] = Por mejorar.
 
--Antonia Acevedo
+*_Antonia Acevedo_*
 
-AA[!] Mejorar resolucion de problemas que van surgiendo durante la resolucion de una funcion. 
+AC[!]
 
-AM[+]
-
-JM[+]
-
--Alexandra Mendoza
-
-AA[+] Exelente resolucion de problema y de manera efectiva ademas de tener la disposicion de ayudar a los demas.
-
-AM[+]
+AM[!] Se recomienda practica en cuanto ala resolucion de problemas / creacion de algoritmos. Realiza tareas solicitadas.
 
 JM[+]
 
--Jorge Morgado
+*_Alexandra Mendoza_*
 
-AA[+] Realiza de forma efectiva sus funciones y de forma ordenada ademas de tener la disposicion a ayudar.
+AC[+]
 
-AM[+]
+AM[+] Se realizan tareas solicitadas.
+
+JM[+]
+
+*_Jorge Morgado_*
+
+AC[+] 
+
+AM[+] Buen desempeño y resolucion de problemas, independiente. Buen desempeño.
 
 JM[+]

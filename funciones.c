@@ -402,7 +402,8 @@ libreria * create_libreria()
 
     return lib;
 }
-\/* busca nuevo limite inferior de frecuencia. 11 iteraciones MAX */
+
+/* busca nuevo limite inferior de frecuencia. 11 iteraciones MAX */
 float liminf_frec(List * l)
 {
     float new_lim;
