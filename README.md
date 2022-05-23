@@ -42,6 +42,7 @@ Este punto consiste en una lista de cualidades positivas y por mejorar de cada i
 <br>
 
 
+<span style="color:yellow"> *_Antonia Acevedo_* </span>
 
     AA[!]Mejorar la resolucion de problemas a la hora de realizar funciones. Errores que aparecen a mediados que se realiza la funcion.
 
