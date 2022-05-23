@@ -855,14 +855,16 @@ void mostrarListaOrdenadaRelevancia(libreria * libreria, List * libros,char * pa
         //palabra * relev=find_relev2(pal,lib,libreria);
         printf("-----------------------------------------------------------------\n");
         printf("-->Titulo: %-52s |\n",lib -> titulo);
-        printf("Palabra: %-10s   Id: %-52s                                      |\n",pal, lib->book_id);
-        printf("                                                                |\n");
+        printf("Palabra: %-5s   Id: %-19s                                      |\n",pal, lib->book_id);
         printf("-----------------------------------------------------------------\n");
         lib = nextList(libros);
     }
 }
 
-
+/**********************************************************************
+Funcion recibe una palabra y entrega los libros en los cuales esta presente
+dicha palabra.
+**********************************************************************/
 void buscarPalabra(libreria * lib){
 
     char palabraBus[MAXCHAR];
@@ -913,7 +915,10 @@ void buscarPalabra(libreria * lib){
     mostrarListaOrdenadaRelevancia(lib,top_Relevancia,palabraBus);
     
 }
-
+/**********************************************************************
+Funcion que recibe una palabra , el titulo de un libro y retorna su contexto 
+en cada aparicion.
+**********************************************************************/
 void contexto_palabra(libreria * libros){
     
 
@@ -923,7 +928,7 @@ void contexto_palabra(libreria * libros){
     char palabra[MAXCHAR];
 
     
-    printf("Ingrese titulo del libro en el cual buscara la palabra: ");
+    printf("Ingrese titulo completo del libro en el cual buscara la palabra: ");
     fgets(titulo, MAXCHAR, stdin);
     char * pos = strstr(titulo, "\n");
     if(pos) titulo[pos-titulo] = '\0';
@@ -947,22 +952,32 @@ void contexto_palabra(libreria * libros){
     printf("Tu Palabra-->%s\n",palabra);
     printf("-----------------------------------------------------------------\n");
     
-    FILE * entrada;
-    /*REFERENCIA:
-        FILE *f = fopen("main.c","r");
-        char x[1024];
-        while (1) {
-            int pos = ftell(f);
-            if (fscanf(f, " %1023s", x) == 1)
-                printf("%s: pos %d\n",x,pos);
-            else break;
-        }
+    
+    FILE *f = fopen(lib->book_id,"r");
+    List * posiciones=createList();
+    char * x[MAXCHAR];
+    printf("\"");
 
-        fseek(f,141,SEEK_SET);
-        fscanf(f, " %1023s", x);
-        printf("pos 141: %s\n",x);
-    */
+    while (1) {
+        int * pos =(int *)ftell(f);
+        if (fscanf(f, "%s", x) == 1)
+            pushBack(posiciones,pos);
+        else break;
+    }
 
+    int * posicionList=(int *)firstList(posiciones);
+    while (posicionList != NULL)
+    {   
+        fseek(f,(*posicionList),SEEK_SET);
+        fscanf(f, " %s", palabra);
+        printf("%s",palabra);
+        posicionList=(int *)nextList(posiciones);
+    }
+    
+
+    printf("\"\n");
+
+   printf("-----------------------------------------------------------------\n");
 
     return;
 } 

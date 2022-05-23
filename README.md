@@ -18,6 +18,8 @@ gcc *.c -o ejecutable.exe
 
 + Números no serán considerados palabras, por lo que no se indexan en el programa.
 
++ Funciones con utilización del "Cálculo de la relevancia", si no se agrega más de un libro, todas las palabras tendran relevancia 0 y entregara todas las palabras con relevancia 0, esto debido a la fórmula utilizada.
+
 + Números representados por letras del alfabeto Inglés si se consideran en indexación.
 
 + Lecturas de título y contenido dependen fuertemente en el formato detectado en los libros de prueba de la tarea. No se leería contenido si no poseen ciertas características especifícas (Evidente en las primeras lineas de la cabecera de funciones)
@@ -36,7 +38,7 @@ AC[!]
 
 AM[!] Se recomienda practica en cuanto ala resolucion de problemas / creacion de algoritmos. Realiza tareas solicitadas.
 
-JM[+]
+JM[+] Buen desempeño en sus funciones ,demuestra interes en el trabajo.
 
 *_Alexandra Mendoza_*
 
@@ -44,7 +46,7 @@ AC[+]
 
 AM[+] Se realizan tareas solicitadas.
 
-JM[+]
+JM[+] Excelente lider grupal, y con muy buenas habilidades a la hora de resolver funciones.
 
 *_Jorge Morgado_*
 
@@ -52,4 +54,4 @@ AC[+]
 
 AM[+] Buen desempeño y resolucion de problemas, independiente. Buen desempeño.
 
-JM[+]
+JM[!] Por mejorar capacidades de entendimiento y resolucion de algoritmos.
