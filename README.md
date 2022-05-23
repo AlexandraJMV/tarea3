@@ -27,7 +27,7 @@ Este punto consiste en una lista de cualidades positivas y por mejorar de cada i
 
 -Antonia Acevedo
 
-AC[!] Mejorar resolucion de problemas que van surgiendo durante la resolucion de una funcion. 
+AA[!] Mejorar resolucion de problemas que van surgiendo durante la resolucion de una funcion. 
 
 AM[+]
 
@@ -35,7 +35,7 @@ JM[+]Buen desempeño en sus funciones ,demuestra interes en el trabajo.
 
 -Alexandra Mendoza
 
-AC[+] Exelente resolucion de problema y de manera efectiva ademas de tener la disposicion de ayudar a los demas.
+AA[+] Exelente resolucion de problema y de manera efectiva ademas de tener la disposicion de ayudar a los demas.
 
 AM[+]
 
@@ -43,7 +43,7 @@ JM[+] Excelente lider grupal, y con muy buenas habilidades a la hora de resolver
 
 -Jorge Morgado
 
-AC[+] Realiza de forma efectiva sus funciones y de forma ordenada ademas de tener la disposicion a ayudar.
+AA[+] Realiza de forma efectiva sus funciones y de forma ordenada ademas de tener la disposicion a ayudar.
 
 AM[+]
 
