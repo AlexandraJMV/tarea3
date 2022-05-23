@@ -15,6 +15,7 @@ gcc *.c -o ejecutable.exe 5. Escribir el siguiente comando para correr el .exe g
 
 1)Antes de utilizar el resto de funciones del programa lo primero que debe hacer, es importar cada uno de los libros a trabajar. (1ºFuncion).
 
+2)funciones con utilizacion del "Calculo de la relevancia", si no se agrega mas de un libro, todas las palabras tendran relevancia 0 y no entregara palabra relevantes.
 
 
 
@@ -30,7 +31,7 @@ AC[!] Mejorar resolucion de problemas que van surgiendo durante la resolucion de
 
 AM[+]
 
-JM[+]
+JM[+]Buen desempeño en sus funciones ,demuestra interes en el trabajo.
 
 -Alexandra Mendoza
 
@@ -38,7 +39,7 @@ AC[+] Exelente resolucion de problema y de manera efectiva ademas de tener la di
 
 AM[+]
 
-JM[+]
+JM[+] Excelente lider grupal, y con muy buenas habilidades a la hora de resolver funciones.
 
 -Jorge Morgado
 
@@ -46,4 +47,4 @@ AC[+] Realiza de forma efectiva sus funciones y de forma ordenada ademas de tene
 
 AM[+]
 
-JM[+]
+JM[!] Por mejorar capacidades de entendimiento y resolucion de algoritmos.
