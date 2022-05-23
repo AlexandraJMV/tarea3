@@ -56,6 +56,8 @@ Este punto consiste en una lista de cualidades positivas y por mejorar de cada i
     AA[+]Muy buen desempeño a la hora de realizar sus funciones y de forma eficiente, con la determinacion de ayudar.
 
     AM[+] Se realizan tareas solicitadas.
+    
+    JM[+] Excelente lider grupal, y con muy buenas habilidades a la hora de resolver funciones.
 
 
 
