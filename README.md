@@ -26,7 +26,7 @@ Este punto consiste en una lista de cualidades positivas y por mejorar de cada i
 
 -Antonia Acevedo
 
-AC[!]
+AA[!] Mejorar resolucion de problemas que van surgiendo durante la resolucion de una funcion. 
 
 AM[+]
 
@@ -34,7 +34,7 @@ JM[+]
 
 -Alexandra Mendoza
 
-AC[+]
+AA[+] Exelente resolucion de problema y de manera efectiva ademas de tener la disposicion de ayudar a los demas.
 
 AM[+]
 
@@ -42,7 +42,7 @@ JM[+]
 
 -Jorge Morgado
 
-AC[+] 
+AA[+] Realiza de forma efectiva sus funciones y de forma ordenada ademas de tener la disposicion a ayudar.
 
 AM[+]
 
