@@ -1,7 +1,8 @@
 > “Aplicación Biblioteca"
 
 Esta aplicación permite indexar gran cantidad de libros en los cuales se puede llevar a cabo búsqueda de palabras, obtener la relevancia y frecuencia que tienen estas dentro de un libro, además permite la creación de una librería por orden alfabético y con información de cada libro que se ingrese.
-
+<br>
+<br>
 > Instrucciones de uso del Programa.
 
 1.	Descargar el archivo .zip
@@ -11,6 +12,8 @@ Esta aplicación permite indexar gran cantidad de libros en los cuales se puede 
 gcc *.c -o ejecutable.exe 
 5. Escribir el siguiente comando para correr el .exe generado : ejecutable.exe
 
+<br>
+<br>
 
 >*Comentarios y recomendaciones acerca del programa y sus funciones.*
 
@@ -28,30 +31,40 @@ gcc *.c -o ejecutable.exe
 
 + Algunas funciones utilizadas en el programa presentan poca opotunidad de re-utilización fuera del contexto de la tarea.
 
+<br>
+<br>
+<br>
+
 > Co-evaluación grupal.
 
 Este punto consiste en una lista de cualidades positivas y por mejorar de cada integrante, las cuales se deberán tener en cuenta para mejorar el trabajo en equipo en un futuro. [ + ] = Positivo [ ! ] = Por mejorar.
 
-*_Antonia Acevedo_*
+<br>
 
-AA[!]Mejorar la resolucion de problemas a la hora de realizar funciones. Errores que aparecen a mediados que se realiza la funcion.
 
-AM[!] Se recomienda practica en cuanto ala resolucion de problemas / creacion de algoritmos. Realiza tareas solicitadas.
 
-JM[+] Buen desempeño en sus funciones ,demuestra interes en el trabajo.
+    AA[!]Mejorar la resolucion de problemas a la hora de realizar funciones. Errores que aparecen a mediados que se realiza la funcion.
 
-*_Alexandra Mendoza_*
+    AM[!] Se recomienda practica en cuanto ala resolucion de problemas / creacion de algoritmos. Realiza tareas solicitadas.
 
-AA[+]Muy buen desempeño a la hora de realizar sus funciones y de forma eficiente, con la determinacion de ayudar.
+    JM[+] Buen desempeño en sus funciones ,demuestra interes en el trabajo.
 
-AM[+] Se realizan tareas solicitadas.
 
-JM[+] Excelente lider grupal, y con muy buenas habilidades a la hora de resolver funciones.
 
-*_Jorge Morgado_*
+<span style="color:green"> *_Alexandra Mendoza_*</span>
 
-AA[+] Trabaja de forma efectiva y sin problemas.
+    AA[+]Muy buen desempeño a la hora de realizar sus funciones y de forma eficiente, con la determinacion de ayudar.
 
-AM[+] Buen desempeño y resolucion de problemas, independiente. Buen desempeño.
+    AM[+] Se realizan tareas solicitadas.
 
-JM[!] Por mejorar capacidades de entendimiento y resolucion de algoritmos.
+
+
+<br>
+
+<span style="color:yellow"> *_Jorge Morgado_* </span>
+
+    AA[+] Trabaja de forma efectiva y sin problemas. 
+
+    AM[+] Buen desempeño y resolucion de problemas, independiente. Buen desempeño.
+
+    JM[!] Por mejorar capacidades de entendimiento y resolucion de algoritmos.
