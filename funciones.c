@@ -56,7 +56,7 @@ void print_menu()
             "\nIngrese lo que desea hacer: ");
 }
 
-// transforma una cadena leida a una seleccion valida.
+// transforma una cadena leida a una seleccion numerica valida.
 int toselect(char * str)
 {
     for(int i=0 ; str[i] != '\0' ; i++)
@@ -97,12 +97,14 @@ void get_pal(char * str, char * ret , int * prev_pos)
     return;
 }
 
+/* Pasa una cadena a minusculas */
 void minusc(char * str)
 {
     for(int i=0 ; str[i] !='\0' ; i++)
         str[i]= tolower(str[i]);
 }
 
+/* retorna palabra sin espacios extra o puntuacion */
 char * clean_pal(char *str)
 {
     int start;
@@ -186,6 +188,7 @@ void guardar_palabras(libro * lib, TreeMap * obj, char *str)
     }
 }
 
+/* Guarda memoria pra variable de tipo libro, iniciando elementos pertinentes para su posterior uso*/
 libro* create_book(char * id)
 {
     libro * lb;
@@ -399,7 +402,7 @@ libreria * create_libreria()
 
     return lib;
 }
-
+\/* busca nuevo limite inferior de frecuencia. 11 iteraciones MAX */
 float liminf_frec(List * l)
 {
     float new_lim;
@@ -452,7 +455,7 @@ void insert_frec(List * l, palabra * p)
     return;
 }
 
-// Inserta un lemento en una lista de forma ordenada segun relevancia */
+// Inserta un elmento en una lista de forma ordenada segun relevancia */
 int insert_relv(List * l, palabra * p)
 {
     palabra * curr = (palabra*)firstList(l);
@@ -539,10 +542,20 @@ void find_top_frecuencia(libro * lib, libreria * libreria)
     } 
 }
 
-/* Busqueda de libro en arbol de libros ordenados segun su ID */
+/* Busqueda de libro en arbol de libros ordenados segun su ID a traves de compraracion de cadenas */
 libro * search_id(TreeMap * libros, char * id)
 {
     libro * currlib;
+
+    char * p = strstr(id , TXT_FORMAT);
+    if (p==NULL)
+    {
+        char * pnt = strstr(id, ".");
+        if(pnt)
+            id[pnt-id] ='\0';
+        strcat(id, TXT_FORMAT);
+    }
+
     TreePair * par = firstTreeMap(libros);
     while(par!=NULL)
     {
@@ -600,6 +613,7 @@ void top_frecuencia(libreria * lib)
         }
         printf("-----------------------------\n");
     }
+    else printf("\nNo se ha ingresado un ID de libro valido\n");
 }
 
 /* Retorna cantidad de apariciones de una palabra respecto a todos los libros */

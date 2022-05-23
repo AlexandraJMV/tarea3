@@ -3,6 +3,12 @@
 #include "funciones.h"
 #include <locale.h>
 
+void clean(void)
+{
+    char c;
+    while((c = getchar()) != '\n' && c != EOF){}
+}
+
 int main(void)
 {
     libreria * librer = create_libreria();
@@ -11,7 +17,7 @@ int main(void)
         system("cls");
         char str[MAXCHAR];
         int select;
-        char c;
+        
 
         print_menu();
         fgets(str, MAXCHAR, stdin);
@@ -21,37 +27,37 @@ int main(void)
         {
         case cargar:
             cargar_docs(librer);
-            getchar();
+            clean();
             break;
         case mostrar_ordenado:
             system("cls");
             mostrar_ord(librer);
-            getchar();
+            clean();
             break;
         case buscar_titulo:
             system("cls");
             buscar_tit(librer);
-            getchar();
+            clean();
             break;
         case mayor_frecuencia:
             system("cls");
             top_frecuencia(librer);
-            getchar();
+            clean();
             break;
         case relevancia_Palabra:
             system("cls");
             mostrar_relevancia(librer);
-            getchar();
+            clean();
             break;
         case buscar_palabra:
             system("cls");
             buscarPalabra(librer);
-            getchar();
+            clean();
             break;
         case cntxt:
             system("cls");
             contexto_palabra(librer);
-            getchar();
+            clean();
             break;
         case end:
             printf("Saliendo del programa...\n");
@@ -59,7 +65,7 @@ int main(void)
             break;
         default:
             printf("Opcion no valida!\n");
-            while((c = getchar()) != '\n' && c != EOF){}
+            clean();
             break;
         }
     }
